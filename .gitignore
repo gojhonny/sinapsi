@@ -5,5 +5,7 @@ coverage/
 *.tgz
 *.tsbuildinfo
 .DS_Store
+.env
+.env.*
 
 .husky/_/

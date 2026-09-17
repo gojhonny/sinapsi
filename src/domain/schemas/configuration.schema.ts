@@ -43,13 +43,13 @@ const componentSchema = z
     'defaults must stay within their limits'
   )
 
-/** Validates `src/graphz.config.json`; a violation is a build-time defect and throws. */
+/** Validates `src/sinapsi.config.json`; a violation is a build-time defect and throws. */
 export const configurationSchema = z.object({
   component: componentSchema,
   palette: paletteSchema,
   graph: z.object({
     neighborsPerNode: z.int().min(1),
-    shape: z.object({ radius: positive, lobeDepth: fraction, roughness: fraction })
+    shape: z.object({ radius: positive, flatten: fraction })
   }),
   motion: z.object({
     secondsPerTurn: positive,

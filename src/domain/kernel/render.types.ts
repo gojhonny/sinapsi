@@ -14,7 +14,7 @@ export interface ProjectedPoint {
 
 export interface RenderNode extends ProjectedPoint {
   readonly weight: number
-  /** 0 paints the text color, 1 paints the primary color; in between blends the two. */
+  /** 0 paints the text token, 1 paints primary; in between blends the two. */
   readonly lit: number
 }
 

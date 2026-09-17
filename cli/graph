@@ -1,0 +1,18 @@
+#!/bin/sh
+set -eu
+
+GRAPH_INVOCATION_DIR=$(pwd -P)
+export GRAPH_INVOCATION_DIR
+
+graph_source=$0
+while [ -L "$graph_source" ]; do
+  graph_source_dir=$(CDPATH= cd -P "$(dirname "$graph_source")" && pwd)
+  graph_link=$(readlink "$graph_source")
+  case "$graph_link" in
+    /*) graph_source=$graph_link ;;
+    *) graph_source=$graph_source_dir/$graph_link ;;
+  esac
+done
+
+CLI_ROOT=$(CDPATH= cd -P "$(dirname "$graph_source")" && pwd)
+exec "$CLI_ROOT/src/graph.sh" "$@"
