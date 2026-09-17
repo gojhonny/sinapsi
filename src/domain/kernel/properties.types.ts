@@ -1,20 +1,20 @@
-/** Motion programs `<graph-z>` can run. */
-export type GraphzMove = 'idle' | 'rotate' | 'pulse'
+/** Motion programs `<sinap-si>` can run. */
+export type SinapsiMove = 'idle' | 'rotate' | 'pulse'
 
 /** Color tokens consumed by the renderer. The background is always transparent. */
-export type GraphzColorKey = 'primary' | 'text' | 'muted'
+export type SinapsiColorKey = 'primary' | 'text' | 'muted'
 
-export type GraphzPalette = Readonly<Record<GraphzColorKey, string>>
+export type SinapsiPalette = Readonly<Record<SinapsiColorKey, string>>
 
 /** Consumer-supplied tokens; omitted or undefined tokens keep the package defaults. */
-export type GraphzPaletteOverrides = {
-  readonly [Key in GraphzColorKey]?: string | undefined
+export type SinapsiPaletteOverrides = {
+  readonly [Key in SinapsiColorKey]?: string | undefined
 }
 
-/** Resolved, validated values behind the public attributes of `<graph-z>`. */
-export interface GraphzProperties {
-  readonly palette: GraphzPalette
-  readonly move: GraphzMove
+/** Resolved, validated values behind the public attributes of `<sinap-si>`. */
+export interface SinapsiProperties {
+  readonly palette: SinapsiPalette
+  readonly move: SinapsiMove
   /** Unitless multiplier applied to every motion program; 1 is the reference pace. */
   readonly speed: number
   /** Rendered node count. */

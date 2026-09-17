@@ -1,0 +1,7 @@
+---
+name: sinapsi-agents
+description: Index of Sinapsi Cursor subagents. Not a review subagent.
+---
+# Cursor subagents
+
+Subagents are optional focused reviewers. They consume the same Sinapsi rules, SPECs, ADRs, and skills as the main agent and must not create a separate policy system.

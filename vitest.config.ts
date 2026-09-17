@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'node:url'
+
 import { defineConfig, mergeConfig } from 'vitest/config'
 
 import viteConfig from './vite.config.ts'
@@ -5,6 +7,11 @@ import viteConfig from './vite.config.ts'
 export default mergeConfig(
   viteConfig,
   defineConfig({
+    resolve: {
+      alias: {
+        'virtual:sinapsi-styles': fileURLToPath(new URL('./test/fixtures/sinapsi-styles.ts', import.meta.url))
+      }
+    },
     test: {
       clearMocks: true,
       coverage: {

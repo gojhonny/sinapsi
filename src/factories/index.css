@@ -1,0 +1,13 @@
+:where(:host) {
+  display: inline-block;
+  width: 16rem;
+  height: 16rem;
+  background: transparent;
+  line-height: 0;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

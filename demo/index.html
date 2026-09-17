@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>sinapsi</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: #0b0b0c;
+        color: #f5f5f5;
+        font: 14px/1.4 ui-sans-serif, system-ui, sans-serif;
+      }
+
+      main {
+        display: grid;
+        gap: 1.25rem;
+        min-height: 100vh;
+        padding: 1.25rem 1.25rem 2rem;
+        justify-items: center;
+        align-content: center;
+      }
+
+      sinap-si {
+        width: min(86vmin, 44rem);
+        height: min(86vmin, 44rem);
+      }
+
+      label {
+        display: grid;
+        gap: 0.25rem;
+        color: #a1a1aa;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <sinap-si id="graph" move="rotate" nodes="80" speed="1" activation="12"></sinap-si>
+      <div class="controls">
+        <label>
+          move
+          <select id="move">
+            <option value="idle">idle</option>
+            <option value="rotate" selected>rotate</option>
+            <option value="pulse">pulse</option>
+          </select>
+        </label>
+        <label>
+          nodes
+          <input id="nodes" type="range" min="8" max="400" value="80" />
+        </label>
+        <label>
+          speed
+          <input id="speed" type="range" min="0.1" max="10" step="0.1" value="1" />
+        </label>
+        <label>
+          activation
+          <input id="activation" type="range" min="0" max="100" value="12" />
+        </label>
+      </div>
+    </main>
+    <script type="module" src="/main.ts"></script>
+  </body>
+</html>

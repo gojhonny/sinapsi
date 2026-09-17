@@ -1,6 +1,6 @@
 import type { ZodType } from 'zod'
 
-const LOG_PREFIX = '[Graphz]'
+const LOG_PREFIX = '[Sinapsi]'
 
 /**
  * Resolves one public property. Absent values (`null`/`undefined`) mean "use the

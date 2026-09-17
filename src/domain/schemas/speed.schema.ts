@@ -1,9 +1,9 @@
-import { GRAPHZ_LIMITS } from '@core/config.data'
+import { SINAPSI_LIMITS } from '@core/config.data'
 import { z } from 'zod'
 
 import { numericSchema } from './numeric.schema'
 
-const { min, max } = GRAPHZ_LIMITS.speed
+const { min, max } = SINAPSI_LIMITS.speed
 
 export const speedSchema = numericSchema
   .pipe(z.number().min(min).max(max))

@@ -1,15 +1,15 @@
 {
-  "name": "@neongate-ai/graphz",
+  "name": "@neongate-ai/sinapsi",
   "version": "0.1.0",
   "description": "A framework-agnostic, SSR-safe Web Component that renders an animated 3D network graph with a configurable palette, motion, speed, density and activation.",
   "type": "module",
   "license": "MIT",
   "author": "gojhonny",
-  "main": "./dist/graphz.js",
-  "module": "./dist/graphz.js",
-  "types": "./dist/graphz.d.ts",
-  "unpkg": "./dist/standalone/graphz.js",
-  "jsdelivr": "./dist/standalone/graphz.js",
+  "main": "./dist/sinapsi.js",
+  "module": "./dist/sinapsi.js",
+  "types": "./dist/sinapsi.d.ts",
+  "unpkg": "./dist/standalone/sinapsi.js",
+  "jsdelivr": "./dist/standalone/sinapsi.js",
   "bin": {
     "graph": "./cli/graph"
   },
@@ -70,9 +70,9 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/graphz.d.ts",
-      "import": "./dist/graphz.js",
-      "default": "./dist/graphz.js"
+      "types": "./dist/sinapsi.d.ts",
+      "import": "./dist/sinapsi.js",
+      "default": "./dist/sinapsi.js"
     },
     "./browser": {
       "types": "./dist/browser.d.ts",
@@ -86,8 +86,8 @@
     },
     "./standalone": {
       "types": "./dist/browser.d.ts",
-      "import": "./dist/standalone/graphz.js",
-      "default": "./dist/standalone/graphz.js"
+      "import": "./dist/standalone/sinapsi.js",
+      "default": "./dist/standalone/sinapsi.js"
     },
     "./index.css": "./dist/index.css",
     "./package.json": "./package.json"
@@ -95,7 +95,7 @@
   "sideEffects": [
     "./dist/browser.js",
     "./dist/index.css",
-    "./dist/standalone/graphz.js"
+    "./dist/standalone/sinapsi.js"
   ],
   "engines": {
     "node": ">=24"

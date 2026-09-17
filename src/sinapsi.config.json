@@ -1,6 +1,6 @@
 {
   "component": {
-    "tagName": "graph-z",
+    "tagName": "sinap-si",
     "defaults": {
       "move": "rotate",
       "speed": 1,
@@ -19,17 +19,17 @@
     "muted": "#A1A1AA"
   },
   "graph": {
-    "neighborsPerNode": 5,
-    "shape": { "radius": 1, "lobeDepth": 0.25, "roughness": 0.06 }
+    "neighborsPerNode": 2,
+    "shape": { "radius": 1, "flatten": 0.1 }
   },
   "motion": {
-    "secondsPerTurn": 20,
-    "tilt": 0.25,
-    "jitter": { "amplitude": 0.045, "frequency": 1.4 },
+    "secondsPerTurn": 28,
+    "tilt": 0.06,
+    "jitter": { "amplitude": 0.01, "frequency": 0.7 },
     "beatsPerMinute": 60,
     "pulseScale": 0.06,
-    "revealSeconds": 2.4,
+    "revealSeconds": 0.7,
     "activationSeconds": 0.6,
-    "camera": { "distance": 3.4, "focalLength": 2.6, "zoom": 0.36 }
+    "camera": { "distance": 3.2, "focalLength": 2.8, "zoom": 0.62 }
   }
 }
