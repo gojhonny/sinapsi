@@ -1,20 +1,53 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
+    "declaration": true,
+    "declarationMap": false,
+    "exactOptionalPropertyTypes": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2022"
+    ],
     "module": "ESNext",
-    "moduleResolution": "bundler",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "types": ["vite/client"],
-    "useDefineForClassFields": true,
-    "verbatimModuleSyntax": true,
-    "moduleDetection": "force",
-    "skipLibCheck": true,
+    "moduleResolution": "Bundler",
     "noEmit": true,
-    "strict": true,
+    "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "paths": {
+      "@configuration": [
+        "./src/graphz.config.json"
+      ],
+      "@core/*": [
+        "./src/core/*"
+      ],
+      "@domain/*": [
+        "./src/domain/*"
+      ],
+      "@factories/*": [
+        "./src/factories/*"
+      ],
+      "@graphz": [
+        "./src/index.ts"
+      ],
+      "@services/*": [
+        "./src/services/*"
+      ]
+    },
+    "resolveJsonModule": true,
+    "rootDir": "src",
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2022",
+    "types": []
   },
-  "include": ["src"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.json"
+  ],
+  "exclude": [
+    "src/**/*.test.ts"
+  ]
 }

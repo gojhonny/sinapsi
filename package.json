@@ -1,18 +1,103 @@
 {
-  "name": "graphz",
-  "private": true,
+  "name": "@neongate-ai/graphz",
   "version": "0.1.0",
+  "description": "A framework-agnostic, SSR-safe Web Component that renders an animated 3D network graph with a configurable palette, motion, speed, density and activation.",
   "type": "module",
+  "license": "MIT",
+  "author": "gojhonny",
+  "main": "./dist/graphz.js",
+  "module": "./dist/graphz.js",
+  "types": "./dist/graphz.d.ts",
+  "unpkg": "./dist/standalone/graphz.js",
+  "jsdelivr": "./dist/standalone/graphz.js",
+  "bin": {
+    "graph": "./cli/graph"
+  },
+  "files": [
+    "dist",
+    "cli"
+  ],
+  "packageManager": "pnpm@12.4.2",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gojhonny/graphz.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gojhonny/graphz/issues"
+  },
+  "homepage": "https://github.com/gojhonny/graphz",
+  "keywords": [
+    "web-components",
+    "custom-elements",
+    "network-graph",
+    "plexus",
+    "canvas",
+    "animation",
+    "motion",
+    "framework-agnostic",
+    "ssr",
+    "react",
+    "vue",
+    "svelte",
+    "angular"
+  ],
   "scripts": {
-    "dev": "vite --open",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "pnpm:devPreinstall": "./cli/graph setup --launcher --bootstrap",
+    "setup": "./cli/graph setup --launcher",
+    "prepack": "./cli/graph check"
   },
   "dependencies": {
-    "motion": "^13.4.0"
+    "motion": "13.4.0",
+    "zod": "4.6.5"
   },
   "devDependencies": {
-    "typescript": "^7.0.2",
-    "vite": "^8.3.0"
+    "@biomejs/biome": "2.5.14",
+    "@commitlint/cli": "21.2.2",
+    "@commitlint/config-conventional": "21.2.2",
+    "@types/react": "19.3.0",
+    "@vitest/coverage-v8": "5.0.1",
+    "happy-dom": "20.14.5",
+    "husky": "9.1.7",
+    "lint-staged": "17.5.1",
+    "semver": "7.8.5",
+    "tsdown": "0.23.0",
+    "typescript": "5.9.3",
+    "vite": "8.3.0",
+    "vitest": "5.0.1"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/graphz.d.ts",
+      "import": "./dist/graphz.js",
+      "default": "./dist/graphz.js"
+    },
+    "./browser": {
+      "types": "./dist/browser.d.ts",
+      "import": "./dist/browser.js",
+      "default": "./dist/browser.js"
+    },
+    "./react-types": {
+      "types": "./dist/react-types.d.ts",
+      "import": "./dist/react-types.js",
+      "default": "./dist/react-types.js"
+    },
+    "./standalone": {
+      "types": "./dist/browser.d.ts",
+      "import": "./dist/standalone/graphz.js",
+      "default": "./dist/standalone/graphz.js"
+    },
+    "./index.css": "./dist/index.css",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": [
+    "./dist/browser.js",
+    "./dist/index.css",
+    "./dist/standalone/graphz.js"
+  ],
+  "engines": {
+    "node": ">=24"
   }
 }

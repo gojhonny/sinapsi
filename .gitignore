@@ -1,3 +1,9 @@
-node_modules
-dist
+node_modules/
+dist/
+coverage/
+.vitest/
+*.tgz
+*.tsbuildinfo
 .DS_Store
+
+.husky/_/
