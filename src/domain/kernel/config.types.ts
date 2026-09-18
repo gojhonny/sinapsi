@@ -58,7 +58,7 @@ export interface SinapsiMotionConfiguration {
   readonly jitter: SinapsiJitterConfiguration
   /** Heartbeat rate of the pulse move at speed 1. */
   readonly beatsPerMinute: number
-  /** Maximum scale added at the peak of a heartbeat. */
+  /** Radial amplitude around rest size: compact at rest, expand at each peak. */
   readonly pulseScale: number
   readonly revealSeconds: number
   readonly activationSeconds: number

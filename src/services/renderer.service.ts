@@ -55,13 +55,12 @@ export class CanvasRendererService {
     }
   }
 
-  private paintNodes({ nodes, reveal, pulse }: RenderFrame, palette: SinapsiPalette): void {
+  private paintNodes({ nodes, reveal }: RenderFrame, palette: SinapsiPalette): void {
     const scale = this.nodeScale()
     const farToNear = [...nodes].sort((a, b) => a.depth - b.depth)
     for (const node of farToNear) {
       const depthFade = lerp(1, 0.42, node.depth)
-      const radius =
-        lerp(1.5, 5.0, node.weight ** 1.7) * scale * depthFade * (1 + pulse * 0.1 * node.lit)
+      const radius = lerp(1.5, 5.0, node.weight ** 1.7) * scale * depthFade
       const resting = blendHex(palette.muted, palette.text, node.weight ** 0.55)
       this.ctx.globalAlpha = Math.max(reveal, 0.55) * lerp(1, 0.55, node.depth)
       this.ctx.fillStyle = blendHex(resting, palette.primary, node.lit)

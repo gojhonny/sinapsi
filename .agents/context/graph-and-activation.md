@@ -7,7 +7,7 @@ highest-degree hub using the primary color; resting nodes blend muted to text
 by connectivity.
 
 `move` is `idle` (still), `rotate` (default 3D tumble on a random wandering axis),
-or `pulse` (heartbeat lub-dub scale). `speed` is a unitless multiplier in
+or `pulse` (heartbeat compact/expand of the whole cloud). `speed` is a unitless multiplier in
 `(0, 10]` defaulting to 1.
 `nodes` is an integer 8–400 defaulting to 170. `activation` is 0–100 defaulting
 to 0.

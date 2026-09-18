@@ -27,7 +27,7 @@
     "tilt": 0.38,
     "jitter": { "amplitude": 0.016, "frequency": 0.9 },
     "beatsPerMinute": 60,
-    "pulseScale": 0.06,
+    "pulseScale": 0.16,
     "revealSeconds": 0.7,
     "activationSeconds": 0.6,
     "camera": { "distance": 3.4, "focalLength": 2.6, "zoom": 0.56 }

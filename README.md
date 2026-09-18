@@ -134,7 +134,8 @@ The element reflects the same presentation controls.
 
 `idle` holds the projected graph still. `rotate` tumbles the cloud on a random
 3D axis that keeps precessing, so the motion visits every direction. `pulse`
-applies a heartbeat lub-dub scale. `speed` multiplies those motions.
+compacts and expands the whole cloud with a heartbeat lub-dub. `speed`
+multiplies those motions.
 
 `activation` lights nodes in breadth-first order starting at the highest-degree
 hub. At 0 every node is muted; at 100 the graph is fully primary-lit.

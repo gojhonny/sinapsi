@@ -10,7 +10,7 @@ import {
   scale,
   vec3
 } from '@core/math/vector3.compute'
-import { heartbeat } from '@core/scene/heartbeat.compute'
+import { heartbeat, heartbeatScale } from '@core/scene/heartbeat.compute'
 import { project } from '@core/scene/projection.compute'
 import type { Graph, GraphNode, Vec3 } from '@domain/kernel/graph.types'
 import type { SinapsiMove } from '@domain/kernel/properties.types'
@@ -60,18 +60,26 @@ export class GraphSceneService {
   snapshot(viewport: Viewport, move: SinapsiMove): RenderFrame {
     const count = this.graph.nodes.length
     const litCount = (this.activation / 100) * count
+    const pulse = move === 'pulse' ? heartbeat(this.pulsePhase) : 0
+    const breath =
+      move === 'pulse' ? heartbeatScale(pulse, sinapsiConfiguration.motion.pulseScale) : 1
 
     return {
-      nodes: this.graph.nodes.map((node) => this.projectNode(node, viewport, litCount)),
+      nodes: this.graph.nodes.map((node) => this.projectNode(node, viewport, litCount, breath)),
       edges: this.graph.edges,
       reveal: this.reveal,
-      pulse: move === 'pulse' ? heartbeat(this.pulsePhase) : 0
+      pulse
     }
   }
 
-  private projectNode(node: GraphNode, viewport: Viewport, litCount: number): RenderNode {
+  private projectNode(
+    node: GraphNode,
+    viewport: Viewport,
+    litCount: number,
+    breath: number
+  ): RenderNode {
     const axis = rotateAroundAxis(this.spinAxis, this.precessAxis, this.precession)
-    const world = rotateAroundAxis(this.jittered(node), axis, this.spin)
+    const world = scale(rotateAroundAxis(this.jittered(node), axis, this.spin), breath)
     return {
       ...project(world, sinapsiConfiguration.motion.camera, viewport, this.sceneRadius),
       weight: node.weight,
