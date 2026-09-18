@@ -106,7 +106,7 @@ Commands:
   lint [--write|--staged]               Run Biome or staged-file checks
   typecheck                             Type-check source and colocated tests
   test [--watch|--coverage] [args]      Run Vitest
-  dev [vite arguments]                  Serve the interactive demo
+  dev [vite arguments]                  Serve the interactive sandbox
   build                                 Build package and standalone distributions
   harness [args]                        Run the external engineering harness tool
   audit                                 Run every versioned repository audit

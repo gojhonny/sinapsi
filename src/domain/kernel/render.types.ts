@@ -13,9 +13,22 @@ export interface ProjectedPoint {
 }
 
 export interface RenderNode extends ProjectedPoint {
+  readonly id: string
+  readonly name: string
   readonly weight: number
   /** 0 paints the text token, 1 paints primary; in between blends the two. */
   readonly lit: number
+  readonly emphasized: boolean
+  readonly dimmed: boolean
+  /** Click-activated discs paint `name` inside the circle. */
+  readonly labeled: boolean
+}
+
+export interface SceneInteraction {
+  readonly hoverIds: ReadonlySet<string>
+  readonly activatedIds: ReadonlySet<string>
+  readonly focusedId: string | null
+  readonly semantic: boolean
 }
 
 /** Everything the renderer needs for one frame, already projected to screen space. */

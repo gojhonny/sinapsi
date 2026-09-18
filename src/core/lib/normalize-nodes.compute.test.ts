@@ -1,28 +1,84 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { DEFAULT_SINAPSI_NODES, SINAPSI_LIMITS } from '@core/config.data'
+import {
+  parseNodesDocument,
+  reportInvalidNodes,
+  serializeNodesDocument
+} from './normalize-nodes.compute'
 
-import { normalizeNodes } from './normalize-nodes.compute'
+const sample = {
+  graph: [
+    {
+      id: 'cause',
+      name: 'Drift cause',
+      payload: { kind: 'cause' },
+      links: [{ id: 'pricing', name: 'Pricing' }]
+    },
+    {
+      id: 'pricing',
+      name: 'Pricing',
+      payload: { kind: 'pricing' },
+      links: [{ id: 'cause', name: 'Drift cause' }]
+    }
+  ]
+}
 
 describe('core/normalize-nodes', () => {
   afterEach(() => {
     vi.restoreAllMocks()
   })
 
-  it('clamps integers above the maximum and reports the substitution', () => {
-    const error = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+  it('round-trips a valid document and snapshots caller objects', () => {
+    const parsed = parseNodesDocument(sample)
+    expect(parsed.ok).toBe(true)
+    if (!parsed.ok) {
+      return
+    }
 
-    expect(normalizeNodes(9000)).toBe(SINAPSI_LIMITS.nodes.max)
-    expect(error).toHaveBeenCalledWith(
-      `[Sinapsi] Invalid nodes=9000: expected an integer between ${SINAPSI_LIMITS.nodes.min} and ${SINAPSI_LIMITS.nodes.max}. Using ${SINAPSI_LIMITS.nodes.max}.`
-    )
+    sample.graph[0].name = 'mutated'
+    expect(parsed.document.graph[0].name).toBe('Drift cause')
+    expect(JSON.parse(serializeNodesDocument(parsed.document))).toEqual({
+      graph: [
+        {
+          id: 'cause',
+          name: 'Drift cause',
+          payload: { kind: 'cause' },
+          links: [{ id: 'pricing', name: 'Pricing' }]
+        },
+        {
+          id: 'pricing',
+          name: 'Pricing',
+          payload: { kind: 'pricing' },
+          links: [{ id: 'cause', name: 'Drift cause' }]
+        }
+      ]
+    })
   })
 
-  it('falls back to the default for non-integers and values below the minimum', () => {
-    const error = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+  it('rejects bad JSON, self-links, and oversized documents', () => {
+    expect(parseNodesDocument('{')).toEqual({ ok: false })
+    expect(
+      parseNodesDocument({
+        graph: [{ id: 'a', name: 'A', payload: {}, links: [{ id: 'a', name: 'A' }] }]
+      })
+    ).toEqual({ ok: false })
+    expect(
+      parseNodesDocument({
+        graph: Array.from({ length: 401 }, (_, index) => ({
+          id: `n${index}`,
+          name: `N${index}`,
+          payload: {},
+          links: []
+        }))
+      })
+    ).toEqual({ ok: false })
+  })
 
-    expect(normalizeNodes(3)).toBe(DEFAULT_SINAPSI_NODES)
-    expect(normalizeNodes('many')).toBe(DEFAULT_SINAPSI_NODES)
-    expect(error).toHaveBeenCalledTimes(2)
+  it('reports invalid nodes without substituting a generated graph', () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    reportInvalidNodes('9000')
+    expect(error).toHaveBeenCalledWith(
+      '[Sinapsi] Invalid nodes=9000: expected a JSON nodes document. Keeping previous graph.'
+    )
   })
 })

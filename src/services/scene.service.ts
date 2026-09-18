@@ -14,14 +14,18 @@ import { heartbeat, heartbeatScale } from '@core/scene/heartbeat.compute'
 import { project } from '@core/scene/projection.compute'
 import type { Graph, GraphNode, Vec3 } from '@domain/kernel/graph.types'
 import type { SinapsiMove } from '@domain/kernel/properties.types'
-import type { RenderFrame, RenderNode, Viewport } from '@domain/kernel/render.types'
+import type {
+  RenderFrame,
+  RenderNode,
+  SceneInteraction,
+  Viewport
+} from '@domain/kernel/render.types'
 
 const TWO_PI = Math.PI * 2
 
 /** Owns the time-dependent state of the graph and projects it for rendering. */
 export class GraphSceneService {
   reveal = 0
-  activation = 0
 
   private sceneRadius: number
   private readonly spinAxis: Vec3
@@ -57,15 +61,25 @@ export class GraphSceneService {
     }
   }
 
-  snapshot(viewport: Viewport, move: SinapsiMove): RenderFrame {
-    const count = this.graph.nodes.length
-    const litCount = (this.activation / 100) * count
+  snapshot(
+    viewport: Viewport,
+    move: SinapsiMove,
+    interaction: SceneInteraction = {
+      hoverIds: new Set(),
+      activatedIds: new Set(),
+      focusedId: null,
+      semantic: false
+    }
+  ): RenderFrame {
     const pulse = move === 'pulse' ? heartbeat(this.pulsePhase) : 0
     const breath =
       move === 'pulse' ? heartbeatScale(pulse, sinapsiConfiguration.motion.pulseScale) : 1
+    const hovering = interaction.semantic && interaction.hoverIds.size > 0
 
     return {
-      nodes: this.graph.nodes.map((node) => this.projectNode(node, viewport, litCount, breath)),
+      nodes: this.graph.nodes.map((node) =>
+        this.projectNode(node, viewport, breath, interaction, hovering)
+      ),
       edges: this.graph.edges,
       reveal: this.reveal,
       pulse
@@ -75,15 +89,25 @@ export class GraphSceneService {
   private projectNode(
     node: GraphNode,
     viewport: Viewport,
-    litCount: number,
-    breath: number
+    breath: number,
+    interaction: SceneInteraction,
+    hovering: boolean
   ): RenderNode {
     const axis = rotateAroundAxis(this.spinAxis, this.precessAxis, this.precession)
     const world = scale(rotateAroundAxis(this.jittered(node), axis, this.spin), breath)
+    const selected = interaction.semantic && interaction.activatedIds.has(node.key)
+    const emphasized =
+      interaction.hoverIds.has(node.key) || interaction.focusedId === node.key || selected
+    const lit = interaction.semantic ? (selected ? 1 : emphasized ? 0.45 : 0) : 0
     return {
       ...project(world, sinapsiConfiguration.motion.camera, viewport, this.sceneRadius),
+      id: node.key,
+      name: node.name,
       weight: node.weight,
-      lit: clamp01(litCount - node.rank)
+      lit,
+      emphasized,
+      dimmed: hovering && !emphasized,
+      labeled: selected
     }
   }
 

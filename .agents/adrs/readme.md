@@ -6,7 +6,9 @@ contracts. Records `0007` onward document current decisions from their stated
 creation date. ADR-0010 establishes Graph as the single repository command
 surface; ADR-0011 adds the explicit public npx installer exception; ADR-0012 adds
 agent-native workflows, runtime guardrails, and harness maturity enforcement;
-ADR-0014 records the Sinapsi product identity.
+ADR-0014 records the Sinapsi product identity; ADR-0015 colocates the Vite
+sandbox and Husky adapters with Graph; ADR-0016 adds interactive semantic nodes; ADR-0017 makes neighborhood
+lighting event-driven and drops public `activation`.
 
 Use [`template.md`](./template.md) for new decisions. Never rewrite an accepted
 ADR to hide a changed decision; record the update and supersede it explicitly.

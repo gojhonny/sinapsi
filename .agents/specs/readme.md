@@ -6,8 +6,11 @@ package intent predated the recovered harness. Records `008` onward describe
 current work and use their actual creation date. SPEC-012 consolidates repository
 commands in Graph, SPEC-014 adds the explicit npx project-setup flow,
 SPEC-015 strengthens skill/rule discoverability, workflows, runtime guardrails,
-and harness-score CI enforcement, SPEC-017 renames the product to Sinapsi, and
-SPEC-018 makes `pulse` compact and expand the whole graph.
+and harness-score CI enforcement, SPEC-017 renames the product to Sinapsi,
+SPEC-018 makes `pulse` compact and expand the whole graph, SPEC-019 moves
+the Vite app to `sandbox/` and Husky adapters to `cli/.husky/`, SPEC-020
+replaces public `nodes` with a semantic JSON document and Obsidian selection,
+and SPEC-021 switches that document to `{ graph }` with event-driven lighting.
 
 Statuses are `Proposed`, `In progress`, `Implemented`, `Superseded`, and
 `Rejected`. Use [`template.md`](./template.md), follow

@@ -183,5 +183,5 @@ Next step:
 
   import '@neongate-ai/sinapsi/browser'
 
-  <sinap-si move="rotate" activation="40"></sinap-si>
+  <sinap-si move="rotate"></sinap-si>
 NEXT

@@ -1,5 +1,6 @@
 :where(:host) {
   display: inline-block;
+  position: relative;
   width: 16rem;
   height: 16rem;
   background: transparent;
@@ -10,4 +11,20 @@ canvas {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+.node-list {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.node-list:focus {
+  outline: none;
 }

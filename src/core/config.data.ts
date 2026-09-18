@@ -19,11 +19,13 @@ export const DEFAULT_SINAPSI_SPEED = sinapsiConfiguration.component.defaults.spe
 
 export const DEFAULT_SINAPSI_NODES = sinapsiConfiguration.component.defaults.nodes
 
-export const DEFAULT_SINAPSI_ACTIVATION = sinapsiConfiguration.component.defaults.activation
-
 export const DEFAULT_SINAPSI_PALETTE = sinapsiConfiguration.palette
 
-export const SINAPSI_COLOR_KEYS = ['primary', 'text', 'muted'] as const satisfies readonly SinapsiColorKey[]
+export const SINAPSI_COLOR_KEYS = [
+  'primary',
+  'text',
+  'muted'
+] as const satisfies readonly SinapsiColorKey[]
 
 export const SINAPSI_COLOR_ATTRIBUTES = {
   primary: 'color-primary',
@@ -31,7 +33,7 @@ export const SINAPSI_COLOR_ATTRIBUTES = {
   muted: 'color-muted'
 } as const satisfies Record<SinapsiColorKey, `color-${SinapsiColorKey}`>
 
-export const SINAPSI_PROPERTY_ATTRIBUTES = ['move', 'speed', 'nodes', 'activation'] as const
+export const SINAPSI_PROPERTY_ATTRIBUTES = ['move', 'speed', 'nodes'] as const
 
 export const SINAPSI_OBSERVED_ATTRIBUTES: readonly string[] = [
   ...SINAPSI_COLOR_KEYS.map((key) => SINAPSI_COLOR_ATTRIBUTES[key]),

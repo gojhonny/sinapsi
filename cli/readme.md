@@ -84,6 +84,7 @@ noninteractive stdout.
 | `graph lint` | Run Biome across the checkout. |
 | `graph typecheck` | Type-check source and colocated tests. |
 | `graph test` | Run Vitest once; supports `--watch` and `--coverage`. |
+| `graph dev` | Serve the interactive sandbox from `sandbox/` with Vite. |
 | `graph build` | Build the module and standalone distributions. |
 | `graph harness` | Run the external harness-score utility explicitly. |
 | `graph audit` | Run all `.audits/*.audit.sh` files through `/bin/sh`. |

@@ -16,6 +16,8 @@ export function createGraph(nodeCount: number): Graph {
 
   const nodes: GraphNode[] = positions.map((position, id) => ({
     id,
+    key: String(id),
+    name: '',
     position,
     jitterAxis: randomUnitVector(),
     jitterPhase: Math.random() * Math.PI * 2,

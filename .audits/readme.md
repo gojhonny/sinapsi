@@ -18,7 +18,7 @@ The complete quality gate also runs them through `graph check`.
 - `documentation.audit.sh`: product-first README assets, consumer Web Component API coverage, repository-maintainer exclusion, and direct Graph CLI guidance.
 - `harness.audit.sh`: record structure, frontmatter, dates, navigation, and terminology.
 - `guardrails.audit.sh`: Cursor hook configuration, shell gate decisions, edit-hook containment, workflows, and reviewer metadata.
-- `package.audit.sh`: payload, scripts, source-only launcher lifecycle, allowed runtime dependencies, hooks, Commitlint, and SemVer policy.
+- `package.audit.sh`: payload, scripts, source-only launcher lifecycle, allowed runtime dependencies, `cli/.husky` adapters, Commitlint, and SemVer policy.
 - `ownership.audit.sh`: npm package, GitHub owner, installer behavior and rejection of stale active references.
 - `tests.audit.sh`: colocated suite layout, naming, Vitest configuration, and CI integration.
 

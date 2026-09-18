@@ -28,7 +28,7 @@
 `@neongate-ai/sinapsi` is a framework-agnostic, SSR-safe Web Component that
 renders a 3D plexus with an Obsidian palette. It exposes one native
 `<sinap-si>` element with a transparent host, a three-color palette,
-idle/rotate/pulse motion, and BFS activation from the graph hub.
+idle/rotate/pulse motion, and optional semantic JSON nodes.
 
 Your application keeps ownership of layout, surrounding UI, and product logic.
 Sinapsi does not ship a background token, a persona, or a framework wrapper.
@@ -38,9 +38,9 @@ Sinapsi does not ship a background token, a persona, or a framework wrapper.
 | Native Web Component | One `<sinap-si>` element for React, Next.js, Vue, Svelte, Angular, vanilla JS, and mixed stacks |
 | Transparent host | `inline-block` 16rem canvas with no packaged background color |
 | Palette | `color-primary`, `color-text`, and `color-muted` |
-| Motion | `idle`, `rotate` (default), and `pulse` |
-| Density | `nodes` integer from 8 to 400, default 170 |
-| Activation | 0–100 BFS fill from the highest-degree hub |
+| Motion | `idle`, `rotate` (default), and `pulse`; pointer-over freezes as idle |
+| Nodes | Omit `nodes` for a generated decorative graph; pass `{ "graph": SinapsiNode[] }` for semantic ids, links, hover, and click |
+| Neighborhood lighting | Hover and click light the undirected one-level neighborhood; click draws each `name` inside those discs |
 | SSR safety | Core imports do not require browser globals |
 
 <br>
@@ -74,9 +74,7 @@ Then use it as a native element:
   role="img"
   aria-label="Network graph"
   move="rotate"
-  nodes="170"
   speed="1"
-  activation="40"
   color-primary="#F97316"
   color-text="#F5F5F5"
   color-muted="#A1A1AA"
@@ -93,8 +91,22 @@ const graph = document.querySelector<SinapsiElement>('sinap-si')!
 
 graph.move = 'pulse'
 graph.speed = 1.2
-graph.nodes = 220
-graph.activation = 60
+graph.nodes = {
+  graph: [
+    {
+      id: 'cause',
+      name: 'Drift cause',
+      payload: { kind: 'cause' },
+      links: [{ id: 'pricing', name: 'Pricing' }]
+    },
+    {
+      id: 'pricing',
+      name: 'Pricing',
+      payload: { kind: 'pricing' },
+      links: [{ id: 'cause', name: 'Drift cause' }]
+    }
+  ]
+}
 ```
 
 <br>
@@ -107,14 +119,15 @@ graph.activation = 60
 | --- | --- | --- | --- |
 | `move` | `idle`, `rotate`, `pulse` | `rotate` | Select the idle animation |
 | `speed` | Number in `(0, 10]` | `1` | Scale animation speed |
-| `nodes` | Integer 8–400 | `170` | Control graph density |
-| `activation` | Number 0–100 | `0` | Fill nodes from the hub in BFS order |
-| `color-primary` | CSS color | `#F97316` | Activated node fill |
-| `color-text` | CSS color | `#F5F5F5` | Residual strokes and highlights |
+| `nodes` | JSON `{ "graph": SinapsiNode[] }` | omitted | Semantic graph; omit for the generated decorative graph |
+| `color-primary` | CSS color | `#F97316` | Neighborhood node fill |
+| `color-text` | CSS color | `#F5F5F5` | In-disc names and residual highlights |
 | `color-muted` | CSS color | `#A1A1AA` | Inactive node fill |
 
-Invalid attributes log `[Sinapsi] Invalid … Using …` and recover to the default
-or a clamped value. `nodes` above 400 logs an error and clamps to 400.
+Invalid `move`, `speed`, and color attributes log
+`[Sinapsi] Invalid … Using …` and recover to the default or a clamped value.
+Invalid `nodes` JSON logs `[Sinapsi] Invalid nodes … Keeping previous graph.`
+and does not apply a partial document.
 
 ### JavaScript properties
 
@@ -124,9 +137,35 @@ The element reflects the same presentation controls.
 | --- | --- |
 | `move` | `idle \| rotate \| pulse` |
 | `speed` | Unitless animation multiplier |
-| `nodes` | Integer node count |
-| `activation` | 0–100 hub fill |
+| `nodes` | Last accepted `{ graph: SinapsiNode[] }` snapshot, or `null` when decorative. Setter accepts that document or its JSON string. |
 | `palette` | `{ primary, text, muted }` object getter/setter |
+
+Each semantic node is `{ id, name, payload, links }`. `links` are
+`{ id, name }` objects whose `id` names another node in the same document
+(0–400 nodes). `payload` is an opaque object and may be `{}`. The property
+getter returns a snapshot; mutating the object you passed in does not change
+the live graph.
+
+`parseNodesDocument` / `serializeNodesDocument` are the Zod parse/stringify
+transformers. Layout uses only `link.id` as undirected edges.
+
+Hovering a semantic node highlights it, its one-level neighbors (including
+inbound reverse links), and the connecting edges. Clicking it activates that
+neighborhood until another node is clicked and draws each `name` centered
+inside those discs. Hover and click always dispatch `sinapsi-node-hover` or
+`sinapsi-node-click`:
+
+```ts
+graph.addEventListener('sinapsi-node-click', (event) => {
+  const { id, event: kind, payload } = event.detail
+  console.log(id, kind, payload)
+})
+```
+
+Events bubble and compose from the host. Detail is
+`{ id, event: 'click' | 'hover', payload }`. Programmatic `nodes` writes do
+not emit. Empty space does not emit and does not clear the click neighborhood.
+Pointer-over the host freezes rotate/pulse as idle without writing `move`.
 
 <br>
 
@@ -137,15 +176,17 @@ The element reflects the same presentation controls.
 compacts and expands the whole cloud with a heartbeat lub-dub. `speed`
 multiplies those motions.
 
-`activation` lights nodes in breadth-first order starting at the highest-degree
-hub. At 0 every node is muted; at 100 the graph is fully primary-lit.
+There is no public `activation` fill. Decorative omitted-`nodes` graphs stay
+muted. A semantic document lights the hovered or clicked one-level
+neighborhood, including connecting edges. Click also paints `node.name`
+inside every activated disc. Node discs are never stroked.
 
 <br>
 
 ## Palette
 
 The host is transparent. Supply contrast in the surrounding page. Use
-`color-primary` for activated nodes, `color-text` for strokes, and
+`color-primary` for neighborhood nodes, `color-text` for in-disc names, and
 `color-muted` for inactive nodes. There is no `color-background` token.
 
 <br>
@@ -166,8 +207,6 @@ export function NetworkMark() {
   return (
     <sinap-si
       move="rotate"
-      nodes={170}
-      activation={40}
       color-primary="#F97316"
       aria-label="Network graph"
     />
@@ -210,12 +249,15 @@ in a non-browser environment.
 
 ## Accessibility
 
-The animated canvas is visual and hidden from assistive technology. The host
-element gets its meaning from your application.
+The animated canvas stays `aria-hidden`. When a valid semantic `nodes`
+document is showing, a visually hidden listbox sibling exposes node names:
+one tab stop, arrow keys move, Enter or Space activates the click path.
+Decorative mode has no listbox.
 
 - For a meaningful visual identity, provide an appropriate role and accessible name.
 - For a decorative graph, hide the host from assistive technology.
 - Do not use animation or palette changes as the only way to communicate meaning.
+- Do not put the semantic listbox under an `aria-hidden` ancestor.
 
 <br>
 

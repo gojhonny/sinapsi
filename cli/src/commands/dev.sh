@@ -9,7 +9,7 @@ case "${1:-}" in
     cat <<'USAGE'
 Usage: graph dev [vite arguments]
 
-Serve the interactive <sinap-si> demo from demo/ with Vite.
+Serve the interactive <sinap-si> sandbox from sandbox/ with Vite.
 USAGE
     exit 0
     ;;
@@ -17,4 +17,4 @@ esac
 
 graph_need pnpm
 cd "$GRAPH_PROJECT_ROOT"
-exec pnpm exec vite demo --config vite.config.ts "$@"
+exec pnpm exec vite sandbox --config vite.config.ts "$@"

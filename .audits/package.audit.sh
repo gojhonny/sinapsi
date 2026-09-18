@@ -18,8 +18,11 @@ const fail = (message) => {
 if (pkg.type === 'module') pass('package is ESM')
 else fail('package type must be module')
 
-if (JSON.stringify(pkg.files) === JSON.stringify(['dist', 'cli'])) pass('npm payload is limited to dist and cli')
-else fail('package files must contain exactly dist and cli')
+if (JSON.stringify(pkg.files) === JSON.stringify(['dist', 'cli/graph', 'cli/readme.md', 'cli/src'])) {
+  pass('npm payload is limited to dist and the Graph CLI sources')
+} else {
+  fail('package files must contain exactly dist, cli/graph, cli/readme.md, and cli/src')
+}
 
 const runtime = Object.keys(pkg.dependencies ?? {}).sort()
 const expectedRuntime = ['motion', 'zod']
@@ -108,7 +111,7 @@ else
   exit 1
 fi
 
-for hook in .husky/pre-commit .husky/commit-msg; do
+for hook in cli/.husky/pre-commit cli/.husky/commit-msg; do
   if [ -f "$hook" ] && [ -x "$hook" ] && /bin/sh -n "$hook"; then
     printf 'PASS  %s is an executable shell hook\n' "$hook"
   else
@@ -117,8 +120,20 @@ for hook in .husky/pre-commit .husky/commit-msg; do
   fi
 done
 
-if grep -F 'graph git pre-commit' .husky/pre-commit >/dev/null 2>&1; then printf 'PASS  pre-commit delegates to Graph\n'; else printf 'FAIL  pre-commit must delegate to Graph\n' >&2; exit 1; fi
-if grep -F 'graph git commit-message' .husky/commit-msg >/dev/null 2>&1; then printf 'PASS  commit-msg delegates to Graph\n'; else printf 'FAIL  commit-msg must delegate to Graph\n' >&2; exit 1; fi
+if grep -F 'graph git pre-commit' cli/.husky/pre-commit >/dev/null 2>&1; then printf 'PASS  pre-commit delegates to Graph\n'; else printf 'FAIL  pre-commit must delegate to Graph\n' >&2; exit 1; fi
+if grep -F 'graph git commit-message' cli/.husky/commit-msg >/dev/null 2>&1; then printf 'PASS  commit-msg delegates to Graph\n'; else printf 'FAIL  commit-msg must delegate to Graph\n' >&2; exit 1; fi
+
+pack_output=$(npm pack --dry-run --ignore-scripts 2>&1) || {
+  printf 'FAIL  npm pack --dry-run failed\n' >&2
+  printf '%s\n' "$pack_output" >&2
+  exit 1
+}
+if printf '%s\n' "$pack_output" | grep -F '.husky' >/dev/null; then
+  printf 'FAIL  npm pack listing must not include .husky\n' >&2
+  exit 1
+else
+  printf 'PASS  npm pack listing excludes Git hooks\n'
+fi
 
 for config in tsdown.config.ts tsdown.standalone.config.ts; do
   if grep -E 'sourcemap:[[:space:]]*false' "$config" >/dev/null 2>&1; then

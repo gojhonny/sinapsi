@@ -3,13 +3,12 @@ description: Scopes the shell-only Graph engineering CLI, direct launcher comman
 globs:
   - "cli/**"
   - "package.json"
-  - ".husky/**"
   - ".github/workflows/**"
 ---
 # Rule 008: Engineering CLI
 
 - Effective: 2026-09-04
-- Updated: 2026-09-17
+- Updated: 2026-09-18
 - Priority: High
 - Applies: `cli/**` and CLI package integration
 

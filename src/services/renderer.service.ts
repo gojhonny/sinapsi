@@ -1,13 +1,16 @@
 import { lerp } from '@core/math/scalar.compute'
+import { type PickableNode, pickNode } from '@core/scene/pick-node.compute'
 import type { SinapsiPalette } from '@domain/kernel/properties.types'
 import type { RenderFrame, RenderNode, Viewport } from '@domain/kernel/render.types'
 import { blendHex } from '@services/scene.service'
 
 const BASE_VIEW = 256
+const LABEL_PADDING = 6
 
 /** Paints an Obsidian-colored 3D plexus: muted leaves, bright hubs, accent when activated. */
 export class CanvasRendererService {
   private readonly ctx: CanvasRenderingContext2D
+  private hits: PickableNode[] = []
 
   constructor(private readonly canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext('2d')
@@ -36,18 +39,30 @@ export class CanvasRendererService {
     this.paintNodes(frame, palette)
   }
 
+  pick(x: number, y: number): string | null {
+    return pickNode(this.hits, x, y)
+  }
+
+  pointerOnCanvas(event: PointerEvent): { x: number; y: number } {
+    const bounds = this.canvas.getBoundingClientRect()
+    return { x: event.clientX - bounds.left, y: event.clientY - bounds.top }
+  }
+
   private paintEdges({ nodes, edges, reveal }: RenderFrame, palette: SinapsiPalette): void {
     const visible = edges.slice(0, Math.floor(edges.length * Math.max(reveal, 0.2)))
     this.ctx.lineCap = 'round'
     this.ctx.lineJoin = 'round'
-    this.ctx.lineWidth = 1
-    this.ctx.strokeStyle = palette.muted
 
     for (const edge of visible) {
       const from = nodes[edge.source]
       const to = nodes[edge.target]
       const near = 1 - (from.depth + to.depth) / 2
-      this.ctx.globalAlpha = (0.14 + 0.28 * near) * Math.max(reveal, 0.45)
+      const neighborhood = from.emphasized && to.emphasized
+      const dim = from.dimmed && to.dimmed ? 0.28 : 1
+      this.ctx.lineWidth = neighborhood ? 1.6 : 1
+      this.ctx.strokeStyle = neighborhood ? palette.primary : palette.muted
+      this.ctx.globalAlpha =
+        (neighborhood ? 0.55 + 0.35 * near : 0.14 + 0.28 * near) * Math.max(reveal, 0.45) * dim
       this.ctx.beginPath()
       this.ctx.moveTo(from.x, from.y)
       this.ctx.lineTo(to.x, to.y)
@@ -58,16 +73,32 @@ export class CanvasRendererService {
   private paintNodes({ nodes, reveal }: RenderFrame, palette: SinapsiPalette): void {
     const scale = this.nodeScale()
     const farToNear = [...nodes].sort((a, b) => a.depth - b.depth)
+    this.hits = []
     for (const node of farToNear) {
       const depthFade = lerp(1, 0.42, node.depth)
-      const radius = lerp(1.5, 5.0, node.weight ** 1.7) * scale * depthFade
+      const restingRadius = lerp(1.5, 5.0, node.weight ** 1.7) * scale * depthFade
+      const fontSize = Math.max(10, 11 * scale)
+      this.ctx.font = `600 ${fontSize}px ui-sans-serif, system-ui, sans-serif`
+      const captionWidth = node.labeled ? this.ctx.measureText(node.name).width : 0
+      const radius = node.labeled
+        ? Math.max(restingRadius, captionWidth / 2 + LABEL_PADDING * scale, fontSize)
+        : restingRadius
+      this.hits.push({ id: node.id, x: node.x, y: node.y, depth: node.depth, radius })
       const resting = blendHex(palette.muted, palette.text, node.weight ** 0.55)
-      this.ctx.globalAlpha = Math.max(reveal, 0.55) * lerp(1, 0.55, node.depth)
+      this.ctx.globalAlpha =
+        Math.max(reveal, 0.55) * lerp(1, 0.55, node.depth) * (node.dimmed ? 0.22 : 1)
       this.ctx.fillStyle = blendHex(resting, palette.primary, node.lit)
       this.ctx.shadowColor = palette.primary
       this.ctx.shadowBlur = node.lit * 4 * scale
       this.disc(node, radius)
       this.ctx.shadowBlur = 0
+      if (node.labeled) {
+        this.ctx.globalAlpha = Math.max(reveal, 0.9)
+        this.ctx.fillStyle = palette.text
+        this.ctx.textAlign = 'center'
+        this.ctx.textBaseline = 'middle'
+        this.ctx.fillText(node.name, node.x, node.y)
+      }
     }
   }
 

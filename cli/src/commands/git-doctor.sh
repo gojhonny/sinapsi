@@ -22,19 +22,19 @@ fail() { printf 'FAIL  %s\n' "$1" >&2; failures=$((failures + 1)); }
 
 if graph_has git && graph_git_checkout; then pass 'Git checkout'; else fail 'Git checkout unavailable'; fi
 
-for git_file in commitlint.config.cjs .lintstagedrc.json .husky/pre-commit .husky/commit-msg; do
+for git_file in commitlint.config.cjs .lintstagedrc.json cli/.husky/pre-commit cli/.husky/commit-msg; do
   if [ -f "$GRAPH_PROJECT_ROOT/$git_file" ]; then pass "$git_file"; else fail "missing $git_file"; fi
 done
 
-if [ -x "$GRAPH_PROJECT_ROOT/.husky/pre-commit" ]; then pass '.husky/pre-commit is executable'; else fail '.husky/pre-commit is not executable'; fi
-if [ -x "$GRAPH_PROJECT_ROOT/.husky/commit-msg" ]; then pass '.husky/commit-msg is executable'; else fail '.husky/commit-msg is not executable'; fi
+if [ -x "$GRAPH_PROJECT_ROOT/cli/.husky/pre-commit" ]; then pass 'cli/.husky/pre-commit is executable'; else fail 'cli/.husky/pre-commit is not executable'; fi
+if [ -x "$GRAPH_PROJECT_ROOT/cli/.husky/commit-msg" ]; then pass 'cli/.husky/commit-msg is executable'; else fail 'cli/.husky/commit-msg is not executable'; fi
 
-if grep -F 'graph git pre-commit' "$GRAPH_PROJECT_ROOT/.husky/pre-commit" >/dev/null 2>&1; then
+if grep -F 'graph git pre-commit' "$GRAPH_PROJECT_ROOT/cli/.husky/pre-commit" >/dev/null 2>&1; then
   pass 'pre-commit is a thin Graph adapter'
 else
   fail 'pre-commit is not a thin Graph adapter'
 fi
-if grep -F 'graph git commit-message' "$GRAPH_PROJECT_ROOT/.husky/commit-msg" >/dev/null 2>&1; then
+if grep -F 'graph git commit-message' "$GRAPH_PROJECT_ROOT/cli/.husky/commit-msg" >/dev/null 2>&1; then
   pass 'commit-msg is a thin Graph adapter'
 else
   fail 'commit-msg is not a thin Graph adapter'
@@ -56,8 +56,8 @@ done
 
 if [ "$ci" = false ] && graph_has git && graph_git_checkout; then
   hooks_path=$(git -C "$GRAPH_PROJECT_ROOT" config --local --get core.hooksPath 2>/dev/null || true)
-  if [ "$hooks_path" = .husky/_ ]; then
-    pass 'core.hooksPath=.husky/_'
+  if [ "$hooks_path" = cli/.husky/_ ]; then
+    pass 'core.hooksPath=cli/.husky/_'
   else
     fail "core.hooksPath is '${hooks_path:-unset}'; run graph git setup"
   fi

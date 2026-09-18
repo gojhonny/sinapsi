@@ -9,13 +9,11 @@ export interface SinapsiPropertyDefaults {
   readonly move: SinapsiMove
   readonly speed: number
   readonly nodes: number
-  readonly activation: number
 }
 
 export interface SinapsiPropertyLimits {
   readonly speed: SinapsiRange
   readonly nodes: SinapsiRange
-  readonly activation: SinapsiRange
 }
 
 export interface SinapsiComponentConfiguration {

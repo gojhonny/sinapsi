@@ -9,4 +9,5 @@ activation, while Graph owns repository behavior.
   with the Conventional Commits configuration.
 
 Run `./cli/graph git setup` after dependency installation. Husky's generated
-`.husky/_/` directory is local installation state and is not committed.
+`cli/.husky/_/` directory is local installation state and is not committed.
+Root `.husky/` is leftover and must be removed by setup.

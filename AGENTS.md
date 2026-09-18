@@ -36,7 +36,7 @@ This repository owns only the `@neongate-ai/sinapsi` npm package.
 - `.agents/` contains context, ADRs, rules, specs, prompts, skills, and explicit workflows.
 - `.audits/` contains deterministic repository checks.
 - `graph help` lists the shell-only local engineering commands.
-- Husky hooks are thin adapters; Graph owns pre-commit and commit-message behavior.
+- Husky hooks are thin adapters in `cli/.husky/`; Graph owns pre-commit and commit-message behavior.
 - `.cursor/hooks.json` enforces agent shell guardrails and fast post-edit feedback; release/publication boundaries remain human-controlled.
 - `.agents/workflows/` contains explicit reusable task sequences; use them instead of inventing ad hoc release or regression procedures.
 - Commit messages follow Conventional Commits and package versions follow SemVer.

@@ -1,3 +1,5 @@
+import type { SinapsiGraphDocument } from './nodes.types'
+
 /** Motion programs `<sinap-si>` can run. */
 export type SinapsiMove = 'idle' | 'rotate' | 'pulse'
 
@@ -17,8 +19,7 @@ export interface SinapsiProperties {
   readonly move: SinapsiMove
   /** Unitless multiplier applied to every motion program; 1 is the reference pace. */
   readonly speed: number
-  /** Rendered node count. */
-  readonly nodes: number
-  /** Percentage of nodes painted with the primary color, from 0 to 100. */
-  readonly activation: number
+  /** Generated decorative density when no semantic document is showing. */
+  readonly generatedNodes: number
+  readonly semanticNodes: SinapsiGraphDocument | null
 }
