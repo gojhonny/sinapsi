@@ -40,11 +40,25 @@
         gap: 1rem;
         justify-content: center;
       }
+
+      #event-log {
+        width: min(86vmin, 44rem);
+        min-height: 5.5rem;
+        margin: 0;
+        padding: 0.75rem 1rem;
+        border: 1px solid #27272a;
+        border-radius: 0.5rem;
+        color: #d4d4d8;
+        background: #18181b;
+        white-space: pre-wrap;
+      }
     </style>
   </head>
   <body>
     <main>
-      <sinap-si id="graph" move="rotate" nodes="120" speed="1" activation="10"></sinap-si>
+      <sinap-si id="graph" move="rotate" speed="1" aria-label="Semantic drift graph"></sinap-si>
+      <p>Hover the graph to freeze motion. Hover a node for one-level neighbors; click to activate.</p>
+      <pre id="event-log">Hover or click a node to echo its payload.</pre>
       <div class="controls">
         <label>
           move
@@ -55,16 +69,8 @@
           </select>
         </label>
         <label>
-          nodes
-          <input id="nodes" type="range" min="8" max="400" value="120" />
-        </label>
-        <label>
           speed
           <input id="speed" type="range" min="0.1" max="10" step="0.1" value="1" />
-        </label>
-        <label>
-          activation
-          <input id="activation" type="range" min="0" max="100" value="10" />
         </label>
       </div>
     </main>

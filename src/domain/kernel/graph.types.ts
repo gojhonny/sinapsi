@@ -6,13 +6,16 @@ export interface Vec3 {
 
 export interface GraphNode {
   readonly id: number
+  /** Stable consumer id in semantic mode; stringified index when generated. */
+  readonly key: string
+  readonly name: string
   readonly position: Vec3
   /** Direction of this node's idle wobble. */
   readonly jitterAxis: Vec3
   readonly jitterPhase: number
   /** Connectivity relative to the best-connected node, from 0 to 1; drives the node radius. */
   readonly weight: number
-  /** Position in the activation order; lower ranks light up first. */
+  /** Internal BFS rank on generated graphs; not a public lighting control. */
   readonly rank: number
 }
 

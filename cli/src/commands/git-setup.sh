@@ -15,18 +15,23 @@ esac
 graph_need git
 graph_git_checkout || graph_die 'Git setup must run inside the Sinapsi checkout.'
 
-mkdir -p "$GRAPH_PROJECT_ROOT/.husky"
-cat >"$GRAPH_PROJECT_ROOT/.husky/pre-commit" <<'HOOK'
+hooks_dir="$GRAPH_PROJECT_ROOT/cli/.husky"
+mkdir -p "$hooks_dir"
+cat >"$hooks_dir/pre-commit" <<'HOOK'
 #!/bin/sh
 exec ./cli/graph git pre-commit "$@"
 HOOK
-cat >"$GRAPH_PROJECT_ROOT/.husky/commit-msg" <<'HOOK'
+cat >"$hooks_dir/commit-msg" <<'HOOK'
 #!/bin/sh
 exec ./cli/graph git commit-message "$@"
 HOOK
-chmod 755 "$GRAPH_PROJECT_ROOT/.husky/pre-commit" "$GRAPH_PROJECT_ROOT/.husky/commit-msg"
+chmod 755 "$hooks_dir/pre-commit" "$hooks_dir/commit-msg"
+
+if [ -e "$GRAPH_PROJECT_ROOT/.husky" ]; then
+  rm -rf "$GRAPH_PROJECT_ROOT/.husky"
+fi
 
 graph_need pnpm
 cd "$GRAPH_PROJECT_ROOT"
-pnpm exec husky >/dev/null
+pnpm exec husky cli/.husky >/dev/null
 graph_print_success 'Husky hooks configured for Sinapsi'

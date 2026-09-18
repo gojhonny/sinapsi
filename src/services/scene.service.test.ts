@@ -1,19 +1,15 @@
 import { sinapsiConfiguration } from '@core/config.data'
 import { createGraph } from '@core/graph/create-graph.compute'
+import { createSemanticGraph } from '@core/graph/create-semantic-graph.compute'
 import { GraphSceneService } from '@services/scene.service'
 import { describe, expect, it } from 'vitest'
 
 describe('service/scene', () => {
-  it('lights nodes in activation order as the percentage grows', () => {
+  it('keeps decorative graphs muted', () => {
     const scene = new GraphSceneService(createGraph(sinapsiConfiguration.component.defaults.nodes))
     scene.reveal = 1
-    scene.activation = 0
     const idle = scene.snapshot({ width: 400, height: 400 }, 'idle')
-    expect(idle.nodes.every((node) => node.lit === 0)).toBe(true)
-
-    scene.activation = 100
-    const full = scene.snapshot({ width: 400, height: 400 }, 'idle')
-    expect(full.nodes.every((node) => node.lit === 1)).toBe(true)
+    expect(idle.nodes.every((node) => node.lit === 0 && !node.labeled)).toBe(true)
   })
 
   it('keeps pulse at rest outside the pulse move', () => {
@@ -34,6 +30,42 @@ describe('service/scene', () => {
 
     expect(compactSpan).toBeLessThan(restSpan)
     expect(expandedSpan).toBeGreaterThan(restSpan)
+  })
+
+  it('dims outsiders while emphasizing a semantic neighborhood', () => {
+    const scene = new GraphSceneService(
+      createSemanticGraph({
+        graph: [
+          { id: 'a', name: 'A', payload: {}, links: [{ id: 'b', name: 'B' }] },
+          { id: 'b', name: 'B', payload: {}, links: [] },
+          { id: 'c', name: 'C', payload: {}, links: [] }
+        ]
+      })
+    )
+    scene.reveal = 1
+    const hover = scene.snapshot({ width: 400, height: 400 }, 'idle', {
+      hoverIds: new Set(['a', 'b']),
+      activatedIds: new Set(),
+      focusedId: null,
+      semantic: true
+    })
+    const hovered = Object.fromEntries(hover.nodes.map((node) => [node.id, node]))
+
+    expect(hovered.a.emphasized).toBe(true)
+    expect(hovered.a.labeled).toBe(false)
+    expect(hovered.c.dimmed).toBe(true)
+
+    const clicked = scene.snapshot({ width: 400, height: 400 }, 'idle', {
+      hoverIds: new Set(),
+      activatedIds: new Set(['a', 'b']),
+      focusedId: null,
+      semantic: true
+    })
+    const activated = Object.fromEntries(clicked.nodes.map((node) => [node.id, node]))
+    expect(activated.a.labeled).toBe(true)
+    expect(activated.a.name).toBe('A')
+    expect(activated.b.labeled).toBe(true)
+    expect(activated.c.labeled).toBe(false)
   })
 })
 

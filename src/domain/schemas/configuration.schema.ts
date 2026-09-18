@@ -26,20 +26,16 @@ const componentSchema = z
     defaults: z.object({
       move: moveSchema,
       speed: positive,
-      nodes: z.int().positive(),
-      activation: z.int().min(0)
+      nodes: z.int().positive()
     }),
     limits: z.object({
       speed: rangeSchema,
-      nodes: integerRangeSchema,
-      activation: integerRangeSchema
+      nodes: integerRangeSchema
     })
   })
   .refine(
     ({ defaults, limits }) =>
-      within(defaults.speed, limits.speed) &&
-      within(defaults.nodes, limits.nodes) &&
-      within(defaults.activation, limits.activation),
+      within(defaults.speed, limits.speed) && within(defaults.nodes, limits.nodes),
     'defaults must stay within their limits'
   )
 

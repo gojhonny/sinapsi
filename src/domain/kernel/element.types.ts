@@ -1,3 +1,4 @@
+import type { SinapsiGraphDocument } from './nodes.types'
 import type { SinapsiMove, SinapsiPalette, SinapsiPaletteOverrides } from './properties.types'
 
 /**
@@ -11,10 +12,8 @@ export interface SinapsiElement extends HTMLElement {
   set move(value: SinapsiMove | null | undefined)
   get speed(): number
   set speed(value: number | null | undefined)
-  get nodes(): number
-  set nodes(value: number | null | undefined)
-  get activation(): number
-  set activation(value: number | null | undefined)
+  get nodes(): SinapsiGraphDocument | null
+  set nodes(value: SinapsiGraphDocument | string | null | undefined)
 }
 
 export type SinapsiElementConstructor = CustomElementConstructor & {
@@ -26,4 +25,6 @@ export type SinapsiElementConstructor = CustomElementConstructor & {
 /** Visual internals created inside the closed shadow root. */
 export interface SinapsiShadowTree {
   readonly canvas: HTMLCanvasElement
+  readonly listbox: HTMLElement
+  syncOptions(document: SinapsiGraphDocument | null): void
 }

@@ -6,7 +6,7 @@ const SINAPSI_STYLES_URL = new URL('./src/factories/index.css', import.meta.url)
 
 /**
  * Inlines the shadow-tree stylesheet as a string module. The same plugin object
- * serves tsdown (package builds), Vite (demo) and Vitest (colocated suites).
+ * serves tsdown (package builds), Vite (sandbox) and Vitest (colocated suites).
  */
 export function sinapsiStylesPlugin() {
   return {

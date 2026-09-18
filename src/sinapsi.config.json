@@ -4,13 +4,11 @@
     "defaults": {
       "move": "rotate",
       "speed": 1,
-      "nodes": 170,
-      "activation": 0
+      "nodes": 170
     },
     "limits": {
       "speed": { "min": 0.1, "max": 10 },
-      "nodes": { "min": 8, "max": 400 },
-      "activation": { "min": 0, "max": 100 }
+      "nodes": { "min": 8, "max": 400 }
     }
   },
   "palette": {

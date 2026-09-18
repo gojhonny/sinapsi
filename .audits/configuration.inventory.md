@@ -1,15 +1,15 @@
 # Configuration ownership inventory
 
-Updated 2026-09-17 for the Sinapsi package reconstruction.
+Updated 2026-09-18 for event-driven neighborhood lighting.
 
 ## Authored defaults
 
 | Owner | Binding/data | Responsibility |
 | --- | --- | --- |
-| `src/sinapsi.config.json` | `component` | Tag name, move/speed/nodes/activation defaults and limits |
+| `src/sinapsi.config.json` | `component` | Tag name, move/speed defaults, and internal generated-node density |
 | `src/sinapsi.config.json` | `palette` | Primary, text and muted colors |
 | `src/sinapsi.config.json` | `graph` | Preferential-attachment degree and 3D spherical plexus |
-| `src/sinapsi.config.json` | `motion` | Camera, rotation, jitter, pulse and activation timing |
+| `src/sinapsi.config.json` | `motion` | Camera, rotation, jitter, pulse and reveal timing |
 
 The JSON is validated once by Zod and frozen. Provider credentials, product copy
 and consumer secrets are never authored here.
@@ -27,7 +27,7 @@ registry remains a WeakMap exemption.
 | --- | --- |
 | `sinapsiConfiguration` | Zod-parsed `src/sinapsi.config.json` |
 | `SINAPSI_TAG_NAME`, `SINAPSI_LIMITS`, `DEFAULT_SINAPSI_*` | `sinapsiConfiguration.component` / `.palette` |
-| `SINAPSI_OBSERVED_ATTRIBUTES` | Color attributes plus move/speed/nodes/activation |
+| `SINAPSI_OBSERVED_ATTRIBUTES` | Color attributes plus move/speed/nodes |
 | Animation and scene services | `sinapsiConfiguration.motion` and `.graph` |
 
 Mutable constructor registries, compiled matchers, types, CSS, tests and

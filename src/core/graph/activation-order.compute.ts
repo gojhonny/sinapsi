@@ -1,10 +1,13 @@
 import { adjacency } from './topology.compute'
 
 /**
- * Breadth-first ranks from the most connected node so activation spreads through
- * the network. Remaining disconnected components are appended by remaining degree.
+ * Breadth-first ranks from the most connected node for generated topology only.
+ * Remaining disconnected components are appended by remaining degree.
  */
-export function activationOrder(edges: readonly { source: number; target: number }[], degree: readonly number[]): number[] {
+export function activationOrder(
+  edges: readonly { source: number; target: number }[],
+  degree: readonly number[]
+): number[] {
   const neighbors = adjacency(edges, degree.length)
   const remaining = degree.map((value, id) => ({ id, value }))
   const visited = new Set<number>()

@@ -1,7 +1,7 @@
 {
   "name": "@neongate-ai/sinapsi",
   "version": "0.1.0",
-  "description": "A framework-agnostic, SSR-safe Web Component that renders an animated 3D network graph with a configurable palette, motion, speed, density and activation.",
+  "description": "A framework-agnostic, SSR-safe Web Component that renders an animated 3D network graph with a configurable palette, motion, and semantic JSON nodes.",
   "type": "module",
   "license": "MIT",
   "author": "gojhonny",
@@ -15,7 +15,9 @@
   },
   "files": [
     "dist",
-    "cli"
+    "cli/graph",
+    "cli/readme.md",
+    "cli/src"
   ],
   "packageManager": "pnpm@12.4.2",
   "publishConfig": {

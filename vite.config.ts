@@ -8,7 +8,7 @@ function resolveProjectPath(relativePath: string): string {
   return fileURLToPath(new URL(relativePath, import.meta.url))
 }
 
-/** Single alias map shared by the demo server and Vitest; mirrors tsconfig paths. */
+/** Single alias map shared by the sandbox server and Vitest; mirrors tsconfig paths. */
 export const projectAliases = {
   '@configuration': resolveProjectPath('./src/sinapsi.config.json'),
   '@core': resolveProjectPath('./src/core'),

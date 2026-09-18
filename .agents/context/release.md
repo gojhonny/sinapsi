@@ -1,9 +1,10 @@
 # Release context
 
-Intentional package payload consists of `dist/`, the POSIX shell `cli/`, and
-npm's automatic root metadata files. Source maps are disabled. Tests, Git hooks,
-`.agents/`, and `.audits/` must not enter the package. The CLI is included only
-to provide the `graph` package binary and explicit npx project setup.
+Intentional package payload consists of `dist/`, the Graph binary `cli/graph`,
+`cli/readme.md`, `cli/src/`, and npm's automatic root metadata files. Source maps
+are disabled. Tests, Git hooks (`cli/.husky/`), `.agents/`, and `.audits/` must
+not enter the package. The CLI is included only to provide the `graph` package
+binary and explicit npx project setup.
 
 Commit messages follow Conventional Commits. `package.json#version` must be
 canonical SemVer. A staged version change must move forward relative to `HEAD`.

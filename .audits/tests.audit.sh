@@ -14,7 +14,7 @@ for path in \
   test/setup.ts \
   test/fixtures/sinapsi-styles.ts \
   src/index.test.ts \
-  src/core/lib/normalize-activation.compute.test.ts \
+  src/core/graph/neighborhood.compute.test.ts \
   src/core/lib/normalize-color.compute.test.ts \
   src/core/lib/normalize-move.compute.test.ts \
   src/core/lib/normalize-nodes.compute.test.ts \

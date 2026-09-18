@@ -56,11 +56,11 @@ fi
 
 if grep -F 'SINAPSI_OBSERVED_ATTRIBUTES' src/core/config.data.ts >/dev/null 2>&1 &&
   grep -F 'color-primary' src/core/config.data.ts >/dev/null 2>&1 &&
-  grep -F 'activation' src/core/config.data.ts >/dev/null 2>&1 &&
+  grep -F 'nodes' src/core/config.data.ts >/dev/null 2>&1 &&
   grep -F 'static readonly observedAttributes = SINAPSI_OBSERVED_ATTRIBUTES' src/factories/element-class.factory.ts >/dev/null 2>&1; then
   pass 'element observed attributes derive from canonical configuration'
 else
-  fail 'element observed attributes must derive from canonical configuration including color and activation'
+  fail 'element observed attributes must derive from canonical configuration including color and nodes'
 fi
 
 if grep -F '"tagName": "sinap-si"' src/sinapsi.config.json >/dev/null 2>&1 &&

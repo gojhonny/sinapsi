@@ -52,7 +52,19 @@ for shell_file in cli/graph cli/src/*.sh cli/src/core/*.sh cli/src/commands/*.sh
 done
 if [ "$shell_failures" -eq 0 ]; then pass 'all Graph shell files pass /bin/sh -n'; else failures=$((failures + shell_failures)); fi
 
-if find cli -type f \( -name '*.mjs' -o -name '*.js' -o -name '*.ts' \) -print | grep . >/dev/null 2>&1; then
+if [ -d sandbox ] && [ -f sandbox/index.html ] && [ ! -e demo ]; then
+  pass 'sandbox replaces demo'
+else
+  fail 'expected sandbox/ and no demo/'
+fi
+
+if [ -x cli/.husky/pre-commit ] && [ -x cli/.husky/commit-msg ] && [ ! -e .husky ]; then
+  pass 'Husky adapters live in cli/.husky'
+else
+  fail 'Husky adapters must live in cli/.husky without a root .husky directory'
+fi
+
+if find cli \( -path 'cli/.husky/_' -prune \) -o -type f \( -name '*.mjs' -o -name '*.js' -o -name '*.ts' \) -print | grep . >/dev/null 2>&1; then
   fail 'CLI contains a non-shell implementation file'
 else
   pass 'CLI implementation is shell-only'

@@ -4,14 +4,14 @@ globs:
   - "package.json"
   - "commitlint.config.cjs"
   - ".lintstagedrc.json"
-  - ".husky/**"
+  - "cli/.husky/**"
   - ".github/workflows/**"
 ---
 # Rule 009: Git commits and semantic versioning
 
 - Effective: 2026-09-04
 - Priority: High
-- Applies: commit messages, `package.json#version`, `.husky/**`, and Git quality configuration
+- Applies: commit messages, `package.json#version`, `cli/.husky/**`, and Git quality configuration
 
 1. Commit messages follow Conventional Commits and are validated by Commitlint during `commit-msg`.
 2. Allowed types are `build`, `chore`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, and `test`.

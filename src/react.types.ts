@@ -1,14 +1,14 @@
 import type { SinapsiElement } from '@domain/kernel/element.types'
+import type { SinapsiGraphDocument } from '@domain/kernel/nodes.types'
 import type { SinapsiMove, SinapsiPaletteOverrides } from '@domain/kernel/properties.types'
 import type { DetailedHTMLProps, HTMLAttributes } from 'react'
 
 export interface SinapsiReactAttributes {
-  activation?: number | string
   'color-muted'?: string
   'color-primary'?: string
   'color-text'?: string
   move?: SinapsiMove
-  nodes?: number | string
+  nodes?: string | SinapsiGraphDocument
   palette?: SinapsiPaletteOverrides
   speed?: number | string
 }
