@@ -19,17 +19,17 @@
     "muted": "#A1A1AA"
   },
   "graph": {
-    "neighborsPerNode": 2,
-    "shape": { "radius": 1, "flatten": 0.1 }
+    "neighborsPerNode": 3,
+    "shape": { "radius": 1, "roughness": 0.08 }
   },
   "motion": {
-    "secondsPerTurn": 28,
-    "tilt": 0.06,
-    "jitter": { "amplitude": 0.01, "frequency": 0.7 },
+    "secondsPerTurn": 16,
+    "tilt": 0.38,
+    "jitter": { "amplitude": 0.016, "frequency": 0.9 },
     "beatsPerMinute": 60,
-    "pulseScale": 0.06,
+    "pulseScale": 0.16,
     "revealSeconds": 0.7,
     "activationSeconds": 0.6,
-    "camera": { "distance": 3.2, "focalLength": 2.8, "zoom": 0.62 }
+    "camera": { "distance": 3.4, "focalLength": 2.6, "zoom": 0.56 }
   }
 }

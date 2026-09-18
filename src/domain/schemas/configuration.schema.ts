@@ -49,7 +49,7 @@ export const configurationSchema = z.object({
   palette: paletteSchema,
   graph: z.object({
     neighborsPerNode: z.int().min(1),
-    shape: z.object({ radius: positive, flatten: fraction })
+    shape: z.object({ radius: positive, roughness: fraction })
   }),
   motion: z.object({
     secondsPerTurn: positive,

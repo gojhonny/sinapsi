@@ -43,3 +43,16 @@ export function rotateZ(v: Vec3, angle: number): Vec3 {
   const sin = Math.sin(angle)
   return vec3(v.x * cos - v.y * sin, v.x * sin + v.y * cos, v.z)
 }
+
+export function normalize(v: Vec3): Vec3 {
+  const mag = length(v) || 1
+  return scale(v, 1 / mag)
+}
+
+/** Rodrigues rotation of `v` around a unit-ish `axis`. */
+export function rotateAroundAxis(v: Vec3, axis: Vec3, angle: number): Vec3 {
+  const k = normalize(axis)
+  const cos = Math.cos(angle)
+  const sin = Math.sin(angle)
+  return add(add(scale(v, cos), scale(cross(k, v), sin)), scale(k, dot(k, v) * (1 - cos)))
+}

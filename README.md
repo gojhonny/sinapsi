@@ -26,7 +26,7 @@
 ## Give your UI a living network
 
 `@neongate-ai/sinapsi` is a framework-agnostic, SSR-safe Web Component that
-renders an Obsidian-style force-directed network graph. It exposes one native
+renders a 3D plexus with an Obsidian palette. It exposes one native
 `<sinap-si>` element with a transparent host, a three-color palette,
 idle/rotate/pulse motion, and BFS activation from the graph hub.
 
@@ -132,9 +132,10 @@ The element reflects the same presentation controls.
 
 ## Motion and activation
 
-`idle` holds the projected graph still. `rotate` spins the graph in plane with a
-slight tilt. `pulse` applies a heartbeat lub-dub scale. `speed` multiplies those
-motions.
+`idle` holds the projected graph still. `rotate` tumbles the cloud on a random
+3D axis that keeps precessing, so the motion visits every direction. `pulse`
+compacts and expands the whole cloud with a heartbeat lub-dub. `speed`
+multiplies those motions.
 
 `activation` lights nodes in breadth-first order starting at the highest-degree
 hub. At 0 every node is muted; at 100 the graph is fully primary-lit.
