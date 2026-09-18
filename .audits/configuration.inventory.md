@@ -8,7 +8,7 @@ Updated 2026-09-17 for the Sinapsi package reconstruction.
 | --- | --- | --- |
 | `src/sinapsi.config.json` | `component` | Tag name, move/speed/nodes/activation defaults and limits |
 | `src/sinapsi.config.json` | `palette` | Primary, text and muted colors |
-| `src/sinapsi.config.json` | `graph` | Preferential-attachment degree and flattened force-layout disc |
+| `src/sinapsi.config.json` | `graph` | Preferential-attachment degree and 3D spherical plexus |
 | `src/sinapsi.config.json` | `motion` | Camera, rotation, jitter, pulse and activation timing |
 
 The JSON is validated once by Zod and frozen. Provider credentials, product copy

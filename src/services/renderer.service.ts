@@ -5,7 +5,7 @@ import { blendHex } from '@services/scene.service'
 
 const BASE_VIEW = 256
 
-/** Paints an Obsidian-style 2D graph: muted leaves, bright hubs, accent when activated. */
+/** Paints an Obsidian-colored 3D plexus: muted leaves, bright hubs, accent when activated. */
 export class CanvasRendererService {
   private readonly ctx: CanvasRenderingContext2D
 
@@ -42,26 +42,28 @@ export class CanvasRendererService {
     this.ctx.lineJoin = 'round'
     this.ctx.lineWidth = 1
     this.ctx.strokeStyle = palette.muted
-    this.ctx.globalAlpha = 0.32 * Math.max(reveal, 0.45)
-    this.ctx.beginPath()
 
     for (const edge of visible) {
       const from = nodes[edge.source]
       const to = nodes[edge.target]
+      const near = 1 - (from.depth + to.depth) / 2
+      this.ctx.globalAlpha = (0.14 + 0.28 * near) * Math.max(reveal, 0.45)
+      this.ctx.beginPath()
       this.ctx.moveTo(from.x, from.y)
       this.ctx.lineTo(to.x, to.y)
+      this.ctx.stroke()
     }
-
-    this.ctx.stroke()
   }
 
   private paintNodes({ nodes, reveal, pulse }: RenderFrame, palette: SinapsiPalette): void {
     const scale = this.nodeScale()
     const farToNear = [...nodes].sort((a, b) => a.depth - b.depth)
     for (const node of farToNear) {
-      const radius = lerp(1.6, 5.2, node.weight ** 1.7) * scale * (1 + pulse * 0.1 * node.lit)
+      const depthFade = lerp(1, 0.42, node.depth)
+      const radius =
+        lerp(1.5, 5.0, node.weight ** 1.7) * scale * depthFade * (1 + pulse * 0.1 * node.lit)
       const resting = blendHex(palette.muted, palette.text, node.weight ** 0.55)
-      this.ctx.globalAlpha = Math.max(reveal, 0.55)
+      this.ctx.globalAlpha = Math.max(reveal, 0.55) * lerp(1, 0.55, node.depth)
       this.ctx.fillStyle = blendHex(resting, palette.primary, node.lit)
       this.ctx.shadowColor = palette.primary
       this.ctx.shadowBlur = node.lit * 4 * scale

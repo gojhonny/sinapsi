@@ -1,13 +1,14 @@
 # Graph and activation context
 
-`<sinap-si>` renders an Obsidian-style knowledge graph in a transparent canvas:
+`<sinap-si>` renders a 3D plexus with an Obsidian palette in a transparent canvas:
 scale-free hubs, muted leaves, thin gray edges, and primary fill for activation.
 Node radius follows degree. Activation fills nodes in BFS order from the
 highest-degree hub using the primary color; resting nodes blend muted to text
 by connectivity.
 
-`move` is `idle` (still), `rotate` (default in-plane spin), or `pulse` (heartbeat
-lub-dub scale). `speed` is a unitless multiplier in `(0, 10]` defaulting to 1.
+`move` is `idle` (still), `rotate` (default 3D tumble on a random wandering axis),
+or `pulse` (heartbeat lub-dub scale). `speed` is a unitless multiplier in
+`(0, 10]` defaulting to 1.
 `nodes` is an integer 8–400 defaulting to 170. `activation` is 0–100 defaulting
 to 0.
 

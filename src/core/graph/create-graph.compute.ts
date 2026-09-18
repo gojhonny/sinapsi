@@ -8,7 +8,7 @@ import type { Graph, GraphNode } from '@domain/kernel/graph.types'
 export function createGraph(nodeCount: number): Graph {
   const { neighborsPerNode, shape } = sinapsiConfiguration.graph
   const edges = preferentialAttachment(nodeCount, neighborsPerNode)
-  const positions = layoutForce(nodeCount, edges, shape.radius, shape.flatten)
+  const positions = layoutForce(nodeCount, edges, shape.radius, shape.roughness)
   const degree = degrees(edges, nodeCount)
   const maxDegree = Math.max(1, ...degree)
   const ranks = activationOrder(edges, degree)

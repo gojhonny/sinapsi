@@ -25,10 +25,10 @@ export interface SinapsiComponentConfiguration {
 }
 
 export interface SinapsiShapeConfiguration {
-  /** Layout radius of the force-directed disc in scene units. */
+  /** Layout radius of the 3D plexus in scene units. */
   readonly radius: number
-  /** Residual z-thickness as a fraction of the radius. */
-  readonly flatten: number
+  /** Radial noise on the spherical seed, as a fraction of the radius. */
+  readonly roughness: number
 }
 
 export interface SinapsiGraphConfiguration {
@@ -51,9 +51,9 @@ export interface SinapsiCameraConfiguration {
 }
 
 export interface SinapsiMotionConfiguration {
-  /** Seconds for one full turn around the vertical axis at speed 1. */
+  /** Seconds for one full tumble at speed 1. */
   readonly secondsPerTurn: number
-  /** Rotation around x as a fraction of the rotation around y. */
+  /** Precession rate as a fraction of spin, so rotate wanders through every axis. */
   readonly tilt: number
   readonly jitter: SinapsiJitterConfiguration
   /** Heartbeat rate of the pulse move at speed 1. */

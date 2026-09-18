@@ -1,9 +1,18 @@
 import { sinapsiConfiguration } from '@core/config.data'
 import { clamp01, lerp } from '@core/math/scalar.compute'
-import { add, length, rotateX, rotateZ, scale } from '@core/math/vector3.compute'
+import {
+  add,
+  cross,
+  length,
+  normalize,
+  randomUnitVector,
+  rotateAroundAxis,
+  scale,
+  vec3
+} from '@core/math/vector3.compute'
 import { heartbeat } from '@core/scene/heartbeat.compute'
 import { project } from '@core/scene/projection.compute'
-import type { Graph, GraphNode } from '@domain/kernel/graph.types'
+import type { Graph, GraphNode, Vec3 } from '@domain/kernel/graph.types'
 import type { SinapsiMove } from '@domain/kernel/properties.types'
 import type { RenderFrame, RenderNode, Viewport } from '@domain/kernel/render.types'
 
@@ -15,12 +24,17 @@ export class GraphSceneService {
   activation = 0
 
   private sceneRadius: number
-  private readonly rotation = { x: 0, y: 0, z: 0 }
+  private readonly spinAxis: Vec3
+  private readonly precessAxis: Vec3
+  private spin = 0
+  private precession = 0
   private elapsed = 0
   private pulsePhase = 0
 
   constructor(private graph: Graph) {
     this.sceneRadius = Math.max(...graph.nodes.map((node) => length(node.position)), 1)
+    this.spinAxis = randomUnitVector()
+    this.precessAxis = perpendicularAxis(this.spinAxis)
   }
 
   replaceGraph(graph: Graph): void {
@@ -31,11 +45,11 @@ export class GraphSceneService {
   advance(deltaSeconds: number, move: SinapsiMove, speed: number): void {
     this.elapsed += deltaSeconds
     const { secondsPerTurn, tilt } = sinapsiConfiguration.motion
-    const yawSpeed = (TWO_PI / secondsPerTurn) * speed
+    const turnSpeed = (TWO_PI / secondsPerTurn) * speed
 
     if (move === 'rotate') {
-      this.rotation.z += yawSpeed * deltaSeconds
-      this.rotation.x += yawSpeed * tilt * deltaSeconds
+      this.spin += turnSpeed * deltaSeconds
+      this.precession += turnSpeed * (0.28 + Math.abs(tilt)) * deltaSeconds
     }
 
     if (move === 'pulse') {
@@ -56,7 +70,8 @@ export class GraphSceneService {
   }
 
   private projectNode(node: GraphNode, viewport: Viewport, litCount: number): RenderNode {
-    const world = rotateX(rotateZ(this.jittered(node), this.rotation.z), this.rotation.x)
+    const axis = rotateAroundAxis(this.spinAxis, this.precessAxis, this.precession)
+    const world = rotateAroundAxis(this.jittered(node), axis, this.spin)
     return {
       ...project(world, sinapsiConfiguration.motion.camera, viewport, this.sceneRadius),
       weight: node.weight,
@@ -76,6 +91,11 @@ export function blendHex(from: string, to: string, amount: number): string {
   const b = parseHex(to)
   const t = clamp01(amount)
   return `#${channel(lerp(a[0], b[0], t))}${channel(lerp(a[1], b[1], t))}${channel(lerp(a[2], b[2], t))}`
+}
+
+function perpendicularAxis(axis: Vec3): Vec3 {
+  const seed = Math.abs(axis.y) < 0.85 ? vec3(0, 1, 0) : vec3(1, 0, 0)
+  return normalize(cross(axis, seed))
 }
 
 function parseHex(color: string): [number, number, number] {
