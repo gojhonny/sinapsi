@@ -16,7 +16,7 @@ globs:
 
 1. Use Vitest for unit and custom-element contract tests.
 2. Use happy-dom for the default DOM suite and Node for SSR import tests.
-3. Test public attributes and properties without piercing a live `<sinap-si>` closed shadow root; focused factory tests may verify generated internals.
+3. Test public attributes and properties without piercing a live `<sinaps-i>` closed shadow root; focused factory tests may verify generated internals.
 4. Use deterministic fakes for canvas, animation frames, and ResizeObserver.
 5. Every regression fix requires a failing test or executable audit that proves the prior failure.
 6. Keep aliases in Vitest synchronized with TypeScript and build configuration.

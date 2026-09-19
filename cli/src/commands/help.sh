@@ -66,7 +66,7 @@ if ! graph_is_repository_source; then
 Sinapsi project installer
 
 Usage:
-  npx -y --package=@neongate-ai/sinapsi@latest graph
+  npx -y --package=sinapsi@latest graph
   graph setup [options]
 
 Options:
@@ -79,7 +79,7 @@ Options:
   --help, -h                            Show this guide
   --version, -V                         Print the executing Sinapsi version
 
-The default command is setup. It adds @neongate-ai/sinapsi to an existing project
+The default command is setup. It adds sinapsi to an existing project
 and prints the framework-neutral registration snippet. It does not generate or
 overwrite application source files.
 EOF_PUBLIC
@@ -144,7 +144,7 @@ Install only the user-scoped launcher:
   pnpm run setup
 
 Consumer installation test:
-  npx -y --package=@neongate-ai/sinapsi@latest graph
+  npx -y --package=sinapsi@latest graph
 
 Graph is implemented entirely with POSIX shell scripts. Package commands are
 owned by Graph; package.json keeps only the setup bridge and npm lifecycle gates.

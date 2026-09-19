@@ -29,7 +29,7 @@ try {
   for (const token of [
     "github.repository == 'gojhonny/sinapsi' && github.ref == 'refs/heads/main'",
     "name !== 'sinapsi'",
-    'neongate-ai-sinapsi-$RELEASE_VERSION.tgz'
+    'sinapsi-$RELEASE_VERSION.tgz'
   ]) {
     assert.ok(release.includes(token), `release identity is missing: ${token}`)
   }

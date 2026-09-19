@@ -1,6 +1,6 @@
 ---
 name: graph-engineering
-description: Use when changing the scale-free topology, force layout, BFS activation, canvas projection, pulse heartbeat, idle/rotate/pulse moves, or node-density behavior of sinap-si.
+description: Use when changing the scale-free topology, force layout, BFS activation, canvas projection, pulse heartbeat, idle/rotate/pulse moves, or node-density behavior of sinaps-i.
 ---
 
 # Sinapsi graph engineering procedure

@@ -1,6 +1,6 @@
 ---
 name: web-components
-description: Use when adding or modifying the native sinap-si element, attributes, properties, lifecycle, closed Shadow DOM, SSR behavior, registration, styling, or animation behavior.
+description: Use when adding or modifying the native sinaps-i element, attributes, properties, lifecycle, closed Shadow DOM, SSR behavior, registration, styling, or animation behavior.
 ---
 
 # Sinapsi Web Component procedure

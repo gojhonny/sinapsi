@@ -8,7 +8,7 @@ binary and explicit npx project setup.
 
 Commit messages follow Conventional Commits. `package.json#version` must be
 canonical SemVer. A staged version change must move forward relative to `HEAD`.
-Stable 1.x releases publish from `gojhonny/graphz` on main; 0.x versions skip
+Stable 1.x releases publish from `gojhonny/sinapsi` on main; 0.x versions skip
 npm publish.
 
 A release-oriented source change runs `graph check`; CI also lints commit history
@@ -16,6 +16,6 @@ through the checked-in Graph entry point and runs `npm pack --dry-run`. The
 `prepack` lifecycle delegates to the same Graph gate.
 
 Consumer project setup remains explicit through
-`npx -y --package=@neongate-ai/sinapsi@latest graph`. Agent runtime guardrails deny
+`npx -y --package=sinapsi@latest graph`. Agent runtime guardrails deny
 autonomous package publication and require human approval for tag, push,
 merge/rebase, and PR-merge boundaries.

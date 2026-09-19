@@ -61,6 +61,6 @@ jobs:
         run: npm pack --pack-destination "$RUNNER_TEMP"
       - name: Publish validated tarball
         if: env.SKIP_PUBLISH != '1'
-        run: npm publish "$RUNNER_TEMP"/neongate-ai-sinapsi-$RELEASE_VERSION.tgz --access public --tag latest --provenance
+        run: npm publish "$RUNNER_TEMP"/sinapsi-$RELEASE_VERSION.tgz --access public --tag latest --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

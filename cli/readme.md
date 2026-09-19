@@ -1,11 +1,11 @@
 # Graph CLI for Sinapsi
 
-Graph is the POSIX shell command surface for `@neongate-ai/sinapsi`. It has two
+Graph is the POSIX shell command surface for `sinapsi`. It has two
 strictly separated execution contexts:
 
 1. **Repository mode** operates on a Sinapsi source checkout.
 2. **Consumer setup mode** is the published npm binary used by
-   `npx --package=@neongate-ai/sinapsi graph`.
+   `npx --package=sinapsi graph`.
 
 There is no Node, MJS, TypeScript, or framework-based command runner. Small
 inline Node programs are used only where reliable JSON parsing is required.
@@ -148,7 +148,7 @@ For one-shot consumer setup, use the explicit package-and-binary form so
 execution never depends on npm inferring the binary name:
 
 ```bash
-npx -y --package=@neongate-ai/sinapsi@latest graph
+npx -y --package=sinapsi@latest graph
 ```
 
 With no arguments, the published binary runs project setup. It requires an
@@ -159,9 +159,9 @@ not create or overwrite application source files.
 Useful variants:
 
 ```bash
-npx -y --package=@neongate-ai/sinapsi@latest graph --package-manager pnpm
-npx -y --package=@neongate-ai/sinapsi@latest graph --project ./apps/web
-npx -y --package=@neongate-ai/sinapsi@latest graph --dry-run
+npx -y --package=sinapsi@latest graph --package-manager pnpm
+npx -y --package=sinapsi@latest graph --project ./apps/web
+npx -y --package=sinapsi@latest graph --dry-run
 ```
 
 This npx flow is separate from the source-checkout engineering launcher. Adding

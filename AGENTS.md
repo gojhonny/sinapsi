@@ -1,6 +1,6 @@
 # Sinapsi engineering instructions
 
-This repository owns only the `@neongate-ai/sinapsi` npm package.
+This repository owns only the `sinapsi` npm package.
 
 ## Required reading order
 

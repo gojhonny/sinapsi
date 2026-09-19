@@ -1,6 +1,6 @@
 # Sinapsi engineering harness
 
-This directory is the versioned engineering context for `@neongate-ai/sinapsi`.
+This directory is the versioned engineering context for `sinapsi`.
 It records product intent, durable decisions, mandatory rules, bounded changes,
 and the evidence used to maintain the package.
 

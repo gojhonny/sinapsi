@@ -22,4 +22,4 @@ Read the relevant SPEC, ADR-0001, ADR-0003, and Rule 004.
 ## Stop conditions
 
 Stop and request an ADR when a change adds built-in semantic content, live-region
-behavior, focusability, or keyboard interaction to `<sinap-si>`.
+behavior, focusability, or keyboard interaction to `<sinaps-i>`.

@@ -10,7 +10,7 @@ Act as a focused reviewer, not an implementer.
 1. Read `AGENTS.md`, the changed SPEC, and linked ADRs/rules.
 2. Inspect public compatibility and package boundaries before internal style.
 3. Verify the main import remains SSR-safe and browser registration side effects stay isolated.
-4. Check `<sinap-si>` lifecycle, attributes/properties, closed-shadow behavior, and animation cleanup.
+4. Check `<sinaps-i>` lifecycle, attributes/properties, closed-shadow behavior, and animation cleanup.
 5. Check Zod validation, console diagnostics, and clamp/default recovery.
 6. Verify tests are deterministic, colocated, and do not hide unhandled runtime errors.
 7. Verify `dist/`/`cli/` payload intent and npx behavior when package metadata changes.

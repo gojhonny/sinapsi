@@ -1,5 +1,5 @@
 ---
-description: Scopes accessibility, host semantics, closed-shadow canvas, and decorative motion behavior for the native sinap-si Web Component.
+description: Scopes accessibility, host semantics, closed-shadow canvas, and decorative motion behavior for the native sinaps-i Web Component.
 globs:
   - "src/factories/**"
   - "src/services/animation.service.ts"
@@ -10,7 +10,7 @@ globs:
 - Effective: 2026-08-21
 - Updated: 2026-09-18
 - Priority: Critical
-- Applies: `<sinap-si>` behavior and documentation
+- Applies: `<sinaps-i>` behavior and documentation
 
 1. The internal canvas stays `aria-hidden` because it conveys appearance.
    When a valid semantic `nodes` document is showing, a listbox sibling of that

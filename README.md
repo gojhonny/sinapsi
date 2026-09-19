@@ -12,12 +12,12 @@
 <p align="center">
   <a href="https://paladini.io/harness-score/guide/maturity-model.html"><img alt="Harness Score L4" src="https://paladini.github.io/harness-score/maturity/badge-l4.svg" height="20"></a>
   <a href="https://github.com/gojhonny/sinapsi/actions/workflows/ci.yml"><img alt="Tests" src="https://img.shields.io/github/actions/workflow/status/gojhonny/sinapsi/ci.yml?branch=main&label=tests&logo=github" height="20"></a>
-  <a href="https://www.npmjs.com/package/@neongate-ai/sinapsi"><img alt="npm version" src="https://img.shields.io/npm/v/%40neongate-ai%2Fsinapsi?logo=npm" height="20"></a>
+  <a href="https://www.npmjs.com/package/sinapsi"><img alt="npm version" src="https://img.shields.io/npm/v/sinapsi?logo=npm" height="20"></a>
 </p>
 
 <p align="center">
   <a href="https://github.com/gojhonny/sinapsi"><strong>Documentation</strong></a>&nbsp;&nbsp;&nbsp;
-  <a href="https://www.npmjs.com/package/@neongate-ai/sinapsi"><strong>npm</strong></a>&nbsp;&nbsp;&nbsp;
+  <a href="https://www.npmjs.com/package/sinapsi"><strong>npm</strong></a>&nbsp;&nbsp;&nbsp;
   <a href="./LICENSE"><strong>MIT License</strong></a>
 </p>
 
@@ -25,7 +25,7 @@
 
 ## Give your UI a living network
 
-`@neongate-ai/sinapsi` is a framework-agnostic, SSR-safe Web Component that
+`sinapsi` is a framework-agnostic, SSR-safe Web Component that
 renders a 3D plexus with an Obsidian palette. It exposes one native
 `<sinaps-i>` element with a transparent host, a three-color palette,
 idle/rotate/pulse motion, and optional semantic JSON nodes.
@@ -48,13 +48,13 @@ Sinapsi does not ship a background token, a persona, or a framework wrapper.
 ## Install
 
 ```bash
-npm install @neongate-ai/sinapsi
+npm install sinapsi
 ```
 
 Or:
 
 ```bash
-pnpm add @neongate-ai/sinapsi
+pnpm add sinapsi
 ```
 
 <br>
@@ -64,7 +64,7 @@ pnpm add @neongate-ai/sinapsi
 Register `<sinaps-i>` from browser-only code:
 
 ```ts
-import '@neongate-ai/sinapsi/browser'
+import 'sinapsi/browser'
 ```
 
 Then use it as a native element:
@@ -84,8 +84,8 @@ Then use it as a native element:
 For typed JavaScript access:
 
 ```ts
-import type { SinapsiElement } from '@neongate-ai/sinapsi'
-import '@neongate-ai/sinapsi/browser'
+import type { SinapsiElement } from 'sinapsi'
+import 'sinapsi/browser'
 
 const graph = document.querySelector<SinapsiElement>('sinaps-i')!
 
@@ -196,8 +196,8 @@ The host is transparent. Supply contrast in the surrounding page. Use
 Import the type augmentation from a client module:
 
 ```ts
-import '@neongate-ai/sinapsi/react-types'
-import '@neongate-ai/sinapsi/browser'
+import 'sinapsi/react-types'
+import 'sinapsi/browser'
 ```
 
 Then render:
@@ -225,19 +225,19 @@ The core package is safe to import when `HTMLElement` and `customElements` are
 not available:
 
 ```ts
-import type { SinapsiElement } from '@neongate-ai/sinapsi'
+import type { SinapsiElement } from 'sinapsi'
 ```
 
 Register the element only inside a browser/client boundary:
 
 ```ts
-await import('@neongate-ai/sinapsi/browser')
+await import('sinapsi/browser')
 ```
 
 If you prefer explicit registration instead of the browser side-effect entry:
 
 ```ts
-import { defineSinapsi } from '@neongate-ai/sinapsi'
+import { defineSinapsi } from 'sinapsi'
 
 defineSinapsi()
 ```
@@ -265,11 +265,11 @@ Decorative mode has no listbox.
 
 | Import | Purpose |
 | --- | --- |
-| `@neongate-ai/sinapsi` | Types, constants, factories, and explicit registration API |
-| `@neongate-ai/sinapsi/browser` | Main API plus automatic browser registration |
-| `@neongate-ai/sinapsi/react-types` | React JSX type augmentation |
-| `@neongate-ai/sinapsi/standalone` | Direct-browser/CDN bundle |
-| `@neongate-ai/sinapsi/index.css` | Explicit stylesheet export |
+| `sinapsi` | Types, constants, factories, and explicit registration API |
+| `sinapsi/browser` | Main API plus automatic browser registration |
+| `sinapsi/react-types` | React JSX type augmentation |
+| `sinapsi/standalone` | Direct-browser/CDN bundle |
+| `sinapsi/index.css` | Explicit stylesheet export |
 
 <br>
 
