@@ -9,7 +9,7 @@ case "${1:-}" in
     cat <<'USAGE'
 Usage: graph dev [vite arguments]
 
-Serve the interactive <sinap-si> sandbox from sandbox/ with Vite.
+Serve the interactive <sinaps-i> sandbox from sandbox/ with Vite.
 USAGE
     exit 0
     ;;

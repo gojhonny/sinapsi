@@ -13,7 +13,7 @@ globs:
 - Applies: `package.json`, `cli/**`, release documentation, and npm payload
 
 1. The package exposes exactly one binary named `graph`, implemented with POSIX shell.
-2. The canonical npx form is `npx --package=@neongate-ai/sinapsi@latest graph`; it performs explicit consumer project setup, not repository engineering operations.
+2. The canonical npx form is `npx --package=sinapsi@latest graph`; it performs explicit consumer project setup, not repository engineering operations.
 3. Consumer setup requires an existing `package.json`, installs Sinapsi into `dependencies`, and never overwrites application source files.
 4. Detect npm, pnpm, yarn, or bun from explicit input, `packageManager`, lockfiles, then npm as the fallback.
 5. Install the same Sinapsi version that supplied the running CLI unless an explicit package specifier is provided.

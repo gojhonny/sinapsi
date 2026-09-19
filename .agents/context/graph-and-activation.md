@@ -1,6 +1,6 @@
 # Graph and activation context
 
-`<sinap-si>` renders a 3D plexus with an Obsidian palette in a transparent canvas:
+`<sinaps-i>` renders a 3D plexus with an Obsidian palette in a transparent canvas:
 scale-free hubs, muted leaves, thin gray edges, and primary fill for a hover or
 click neighborhood. Node radius follows degree. Node discs are never stroked.
 

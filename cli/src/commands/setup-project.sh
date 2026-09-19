@@ -38,11 +38,11 @@ while [ "$#" -gt 0 ]; do
       [ "$#" -eq 1 ] || graph_die 'Project setup help does not accept additional arguments.' 2
       cat <<'HELP'
 Usage:
-  npx -y --package=@neongate-ai/sinapsi@latest graph
+  npx -y --package=sinapsi@latest graph
   graph setup [--project <directory>] [--package-manager <manager>]
             [--package-spec <specifier>] [--force] [--dry-run]
 
-Project setup installs @neongate-ai/sinapsi into an existing JavaScript project.
+Project setup installs sinapsi into an existing JavaScript project.
 The package manager is selected from package.json#packageManager, lockfiles, or
 npm as a fallback. No application source file is generated or overwritten.
 HELP
@@ -75,18 +75,18 @@ try {
 NODE
 ) || graph_die "Invalid package.json in $graph_target_dir." 2
 
-[ "$graph_target_name" != '@neongate-ai/sinapsi' ] ||
+[ "$graph_target_name" != 'sinapsi' ] ||
   graph_die 'Project setup cannot install Sinapsi into the Sinapsi package itself.' 2
 
 if [ -z "$graph_package_spec" ]; then
   graph_package_version=$(graph_project_version 2>/dev/null || true)
   [ -n "$graph_package_version" ] || graph_die 'Unable to resolve the executing Sinapsi version.'
-  graph_package_spec="@neongate-ai/sinapsi@$graph_package_version"
+  graph_package_spec="sinapsi@$graph_package_version"
 fi
 
 case "$graph_package_spec" in
-  @neongate-ai/sinapsi|@neongate-ai/sinapsi@*) ;;
-  *) graph_die "Package specifier must target @neongate-ai/sinapsi: $graph_package_spec" 2 ;;
+  sinapsi|sinapsi@*) ;;
+  *) graph_die "Package specifier must target sinapsi: $graph_package_spec" 2 ;;
 esac
 
 if [ -z "$graph_package_manager" ]; then
@@ -133,13 +133,13 @@ graph_existing_dependency=$(node - "$graph_target_dir/package.json" <<'NODE'
 const fs = require('node:fs')
 const file = process.argv[2]
 const manifest = JSON.parse(fs.readFileSync(file, 'utf8'))
-const value = manifest.dependencies?.['@neongate-ai/sinapsi']
+const value = manifest.dependencies?.['sinapsi']
 if (typeof value === 'string') process.stdout.write(value)
 NODE
 ) || graph_die "Invalid package.json in $graph_target_dir." 2
 
 if [ -n "$graph_existing_dependency" ] && [ "$graph_force" = false ]; then
-  graph_print_success "@neongate-ai/sinapsi is already a project dependency ($graph_existing_dependency)"
+  graph_print_success "sinapsi is already a project dependency ($graph_existing_dependency)"
 else
   if [ "$graph_dry_run" = false ]; then
     graph_need "$graph_package_manager"
@@ -169,19 +169,19 @@ graph_recorded_dependency=$(node - "$graph_target_dir/package.json" <<'NODE'
 const fs = require('node:fs')
 const file = process.argv[2]
 const manifest = JSON.parse(fs.readFileSync(file, 'utf8'))
-const value = manifest.dependencies?.['@neongate-ai/sinapsi']
+const value = manifest.dependencies?.['sinapsi']
 if (typeof value === 'string') process.stdout.write(value)
 NODE
 ) || graph_die "Invalid package.json after $graph_package_manager setup." 2
 [ -n "$graph_recorded_dependency" ] ||
-  graph_die "$graph_package_manager completed without adding @neongate-ai/sinapsi to dependencies."
+  graph_die "$graph_package_manager completed without adding sinapsi to dependencies."
 
 graph_print_success "Sinapsi project setup completed ($graph_recorded_dependency)"
 cat <<'NEXT'
 
 Next step:
 
-  import '@neongate-ai/sinapsi/browser'
+  import 'sinapsi/browser'
 
-  <sinap-si move="rotate"></sinap-si>
+  <sinaps-i move="rotate"></sinaps-i>
 NEXT

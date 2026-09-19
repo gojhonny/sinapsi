@@ -2,7 +2,7 @@ import type { SinapsiGraphDocument } from './nodes.types'
 import type { SinapsiMove, SinapsiPalette, SinapsiPaletteOverrides } from './properties.types'
 
 /**
- * Public surface of `<sinap-si>`. Attributes are the source of truth: getters
+ * Public surface of `<sinaps-i>`. Attributes are the source of truth: getters
  * read and normalize them, setters write normalized values back.
  */
 export interface SinapsiElement extends HTMLElement {

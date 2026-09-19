@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   publish:
-    if: github.repository == 'gojhonny/graphz' && github.ref == 'refs/heads/main'
+    if: github.repository == 'gojhonny/sinapsi' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -41,7 +41,7 @@ jobs:
           node --input-type=module <<'NODE'
           import { readFileSync, appendFileSync } from 'node:fs'
           const { name, version } = JSON.parse(readFileSync('package.json', 'utf8'))
-          if (name !== '@neongate-ai/sinapsi') {
+          if (name !== 'sinapsi') {
             throw new Error('Expected the canonical Sinapsi package')
           }
           if (!/^\d+\.\d+\.\d+$/.test(version)) {
@@ -61,6 +61,6 @@ jobs:
         run: npm pack --pack-destination "$RUNNER_TEMP"
       - name: Publish validated tarball
         if: env.SKIP_PUBLISH != '1'
-        run: npm publish "$RUNNER_TEMP"/neongate-ai-sinapsi-$RELEASE_VERSION.tgz --access public --tag latest --provenance
+        run: npm publish "$RUNNER_TEMP"/sinapsi-$RELEASE_VERSION.tgz --access public --tag latest --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

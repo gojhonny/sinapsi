@@ -1,5 +1,5 @@
 {
-  "name": "@neongate-ai/sinapsi",
+  "name": "sinapsi",
   "version": "0.1.0",
   "description": "A framework-agnostic, SSR-safe Web Component that renders an animated 3D network graph with a configurable palette, motion, and semantic JSON nodes.",
   "type": "module",
@@ -20,17 +20,14 @@
     "cli/src"
   ],
   "packageManager": "pnpm@12.4.2",
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gojhonny/graphz.git"
+    "url": "git+https://github.com/gojhonny/sinapsi.git"
   },
   "bugs": {
-    "url": "https://github.com/gojhonny/graphz/issues"
+    "url": "https://github.com/gojhonny/sinapsi/issues"
   },
-  "homepage": "https://github.com/gojhonny/graphz",
+  "homepage": "https://github.com/gojhonny/sinapsi",
   "keywords": [
     "web-components",
     "custom-elements",

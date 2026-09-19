@@ -1,6 +1,6 @@
 # Sinapsi engineering instructions
 
-This repository owns only the `@neongate-ai/sinapsi` npm package.
+This repository owns only the `sinapsi` npm package.
 
 ## Required reading order
 
@@ -21,7 +21,7 @@ This repository owns only the `@neongate-ai/sinapsi` npm package.
 
 ## Repository boundaries
 
-- Keep `<sinap-si>` as the single runtime UI implementation.
+- Keep `<sinaps-i>` as the single runtime UI implementation.
 - Keep the package framework-agnostic and SSR-safe.
 - Do not add documentation-site code or framework example applications here.
 - Do not add runtime framework wrappers.

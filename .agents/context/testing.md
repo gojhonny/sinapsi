@@ -7,7 +7,7 @@ only shared setup and fixtures remain under `test/`.
 
 Suite names start with the canonical concern prefix followed by a responsibility:
 `core/`, `factory/`, `service/`, or `schema/`. Tests import Vitest APIs explicitly
-and exercise public behavior. Element tests do not pierce a live `<sinap-si>`
+and exercise public behavior. Element tests do not pierce a live `<sinaps-i>`
 closed shadow root; focused factory tests may inspect a tree they construct
 directly.
 

@@ -40,8 +40,8 @@ fi
 
 for token in \
   'paladini.github.io/harness-score/maturity/badge-l4.svg' \
-  'github/actions/workflow/status/gojhonny/graphz/ci.yml' \
-  'img.shields.io/npm/v/%40neongate-ai%2Fsinapsi'
+  'github/actions/workflow/status/gojhonny/sinapsi/ci.yml' \
+  'img.shields.io/npm/v/sinapsi'
 do
   if grep -F "$token" README.md >/dev/null 2>&1; then
     pass "README contains badge $token"
@@ -52,8 +52,8 @@ done
 
 if awk '
   BEGIN {
-    expected[1] = "<a href=\"https://github.com/gojhonny/graphz\"><strong>Documentation</strong></a>"
-    expected[2] = "<a href=\"https://www.npmjs.com/package/@neongate-ai/sinapsi\"><strong>npm</strong></a>"
+    expected[1] = "<a href=\"https://github.com/gojhonny/sinapsi\"><strong>Documentation</strong></a>"
+    expected[2] = "<a href=\"https://www.npmjs.com/package/sinapsi\"><strong>npm</strong></a>"
     expected[3] = "<a href=\"./LICENSE\"><strong>MIT License</strong></a>"
   }
   /^[[:space:]]*<p align="center">[[:space:]]*$/ {
@@ -96,8 +96,8 @@ do
 done
 
 for token in \
-  '@neongate-ai/sinapsi/browser' \
-  '<sinap-si' \
+  'sinapsi/browser' \
+  '<sinaps-i' \
   color-primary \
   color-text \
   color-muted \

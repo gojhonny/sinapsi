@@ -1,7 +1,7 @@
 # Product context
 
-Sinapsi is the `@neongate-ai/sinapsi` package: a framework-agnostic, SSR-safe
-3D plexus with an Obsidian palette as one native custom element, `<sinap-si>`.
+Sinapsi is the `sinapsi` package: a framework-agnostic, SSR-safe
+3D plexus with an Obsidian palette as one native custom element, `<sinaps-i>`.
 
 ## Product boundary
 

@@ -1,5 +1,5 @@
 ---
-description: Scopes palette tokens, move/speed/nodes normalization, neighborhood lighting, and console diagnostics for the sinap-si public contract.
+description: Scopes palette tokens, move/speed/nodes normalization, neighborhood lighting, and console diagnostics for the sinaps-i public contract.
 globs:
   - "src/core/**"
   - "src/domain/**"

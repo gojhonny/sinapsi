@@ -63,7 +63,7 @@ else
   fail 'element observed attributes must derive from canonical configuration including color and nodes'
 fi
 
-if grep -F '"tagName": "sinap-si"' src/sinapsi.config.json >/dev/null 2>&1 &&
+if grep -F '"tagName": "sinaps-i"' src/sinapsi.config.json >/dev/null 2>&1 &&
   grep -F 'SINAPSI_TAG_NAME = sinapsiConfiguration.component.tagName' src/core/config.data.ts >/dev/null 2>&1; then
   pass 'custom element tag derives from canonical configuration'
 else

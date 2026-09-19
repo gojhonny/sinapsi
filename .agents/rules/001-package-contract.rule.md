@@ -8,14 +8,14 @@ alwaysApply: true
 - Priority: Critical
 - Applies: Always
 
-1. `@neongate-ai/sinapsi` is a library, not an application or monorepo.
+1. `sinapsi` is a library, not an application or monorepo.
 2. Keep the package framework-agnostic and SSR-safe.
-3. Keep `<sinap-si>` as the only runtime UI implementation.
-4. `@neongate-ai/sinapsi/browser` owns registration side effects.
+3. Keep `<sinaps-i>` as the only runtime UI implementation.
+4. `sinapsi/browser` owns registration side effects.
 5. `react-types` is type-only and must not add a React runtime dependency.
 6. Intentional npm payload is limited to `dist/`, the shell-only `cli/`, and npm root metadata.
 7. Do not publish source maps.
 8. Treat every public export, attribute, property, and entry point as a compatibility commitment.
 9. Documentation sites and framework examples live outside this repository.
-10. npm identity and GitHub ownership are independent: publish `@neongate-ai/sinapsi` from `gojhonny/graphz`.
+10. npm identity and GitHub ownership are independent: publish `sinapsi` from `gojhonny/sinapsi`.
 11. Runtime dependencies are limited to pinned `motion` and `zod`. The standalone bundle inlines both.

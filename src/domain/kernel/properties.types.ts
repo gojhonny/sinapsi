@@ -1,6 +1,6 @@
 import type { SinapsiGraphDocument } from './nodes.types'
 
-/** Motion programs `<sinap-si>` can run. */
+/** Motion programs `<sinaps-i>` can run. */
 export type SinapsiMove = 'idle' | 'rotate' | 'pulse'
 
 /** Color tokens consumed by the renderer. The background is always transparent. */
@@ -13,7 +13,7 @@ export type SinapsiPaletteOverrides = {
   readonly [Key in SinapsiColorKey]?: string | undefined
 }
 
-/** Resolved, validated values behind the public attributes of `<sinap-si>`. */
+/** Resolved, validated values behind the public attributes of `<sinaps-i>`. */
 export interface SinapsiProperties {
   readonly palette: SinapsiPalette
   readonly move: SinapsiMove

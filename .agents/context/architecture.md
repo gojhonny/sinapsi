@@ -2,11 +2,11 @@
 
 ## Entry points
 
-- `@neongate-ai/sinapsi` is side-effect free and safe to import during SSR.
-- `@neongate-ai/sinapsi/browser` registers `<sinap-si>` in the active custom-element registry.
-- `@neongate-ai/sinapsi/react-types` provides type-only JSX augmentation.
-- `@neongate-ai/sinapsi/standalone` is the direct-browser bundle with motion and zod inlined.
-- `@neongate-ai/sinapsi/index.css` exposes package CSS when explicitly needed.
+- `sinapsi` is side-effect free and safe to import during SSR.
+- `sinapsi/browser` registers `<sinaps-i>` in the active custom-element registry.
+- `sinapsi/react-types` provides type-only JSX augmentation.
+- `sinapsi/standalone` is the direct-browser bundle with motion and zod inlined.
+- `sinapsi/index.css` exposes package CSS when explicitly needed.
 
 ## Runtime layers
 
