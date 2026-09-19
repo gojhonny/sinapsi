@@ -20,14 +20,14 @@ const pass = (message) => console.log(`PASS  ${message}`)
 try {
   assert.equal(pkg.name, '@neongate-ai/sinapsi', 'package must use the Sinapsi npm identity')
   assert.equal(pkg.author, 'gojhonny', 'author must use the owner handle without an invented email')
-  assert.equal(pkg.repository?.url, 'git+https://github.com/gojhonny/graphz.git')
-  assert.equal(pkg.bugs?.url, 'https://github.com/gojhonny/graphz/issues')
+  assert.equal(pkg.repository?.url, 'git+https://github.com/gojhonny/sinapsi.git')
+  assert.equal(pkg.bugs?.url, 'https://github.com/gojhonny/sinapsi/issues')
   assert.match(read('LICENSE'), /Copyright \(c\) 2026 gojhonny/)
   pass('npm identity, GitHub metadata and license identify Sinapsi under gojhonny')
 
   const release = read('.github/workflows/release.yml')
   for (const token of [
-    "github.repository == 'gojhonny/graphz' && github.ref == 'refs/heads/main'",
+    "github.repository == 'gojhonny/sinapsi' && github.ref == 'refs/heads/main'",
     "name !== '@neongate-ai/sinapsi'",
     'neongate-ai-sinapsi-$RELEASE_VERSION.tgz'
   ]) {
