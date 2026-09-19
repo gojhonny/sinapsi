@@ -25,12 +25,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gojhonny/graphz.git"
+    "url": "git+https://github.com/gojhonny/sinapsi.git"
   },
   "bugs": {
-    "url": "https://github.com/gojhonny/graphz/issues"
+    "url": "https://github.com/gojhonny/sinapsi/issues"
   },
-  "homepage": "https://github.com/gojhonny/graphz",
+  "homepage": "https://github.com/gojhonny/sinapsi",
   "keywords": [
     "web-components",
     "custom-elements",
