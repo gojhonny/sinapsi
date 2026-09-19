@@ -1,3 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="720" height="48" viewBox="0 0 720 48" role="img" aria-label="One native network-graph component for every web stack.">
-  <text x="360" y="32" text-anchor="middle" fill="#F5F5F5" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20">One native network-graph component for every web stack.</text>
+<svg width="1800" height="90" viewBox="0 0 1800 90"
+  xmlns="http://www.w3.org/2000/svg"
+  role="img" aria-labelledby="title desc">
+  <title id="title">Sinapsi tagline</title>
+  <desc id="desc">Your product vision drifts on a living graph</desc>
+
+  <text
+    x="900"
+    y="45"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    fill="#111111"
+    stroke="#FFFFFF"
+    stroke-width="1"
+    paint-order="stroke fill"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="44"
+    font-weight="700"
+    xml:space="preserve"
+  >Your product vision drifts on a living graph</text>
 </svg>

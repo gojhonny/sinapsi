@@ -2,7 +2,7 @@
 
 - Status: Implemented
 - Created: 2026-09-04
-- Updated: 2026-09-04
+- Updated: 2026-09-19
 - Mode: Current
 - Owner: Sinapsi maintainers
 
@@ -16,7 +16,7 @@ In scope: the Sinapsi package, CLI, harness, and audits needed to satisfy this c
 
 ## Requirements
 
-Ship tagline, banner, badges, and consumer API docs; keep Graph commands in cli/readme.md.
+Ship a centered HTML headline, banner, badges, and consumer API docs; keep Graph commands in cli/readme.md.
 
 ## Acceptance criteria
 

@@ -4,7 +4,8 @@ Skills are reusable procedures for common Sinapsi work. They guide execution but
 not replace specifications, ADRs, or rules.
 
 Available skills cover accessibility, code review, context engineering,
-documentation/ADRs, harness maintenance, implementation, spec-driven development,
-TDD, specification/ticket conversion, graph engineering, and Web Components.
+create-readme, documentation/ADRs, harness maintenance, implementation,
+spec-driven development, TDD, specification/ticket conversion, graph
+engineering, and Web Components.
 Each `SKILL.md` declares `name` and a trigger-worthy `description` in YAML
 frontmatter so agents can discover the procedure when it is relevant.

@@ -9,7 +9,6 @@ pass() { printf 'PASS  %s\n' "$1"; }
 fail() { printf 'FAIL  %s\n' "$1" >&2; failures=$((failures + 1)); }
 
 for image in \
-  assets/images/sinapsi-tagline.svg \
   assets/images/readme-banner.png
 do
   if [ -s "$image" ]; then
@@ -19,23 +18,23 @@ do
   fi
 done
 
-tagline_line=$(grep -n -m1 'assets/images/sinapsi-tagline.svg' README.md | cut -d: -f1 || true)
+headline_line=$(grep -n -m1 '<h1 align="center">' README.md | cut -d: -f1 || true)
 banner_line=$(grep -n -m1 'assets/images/readme-banner.png' README.md | cut -d: -f1 || true)
 badges_line=$(grep -n -m1 'badge-l4.svg' README.md | cut -d: -f1 || true)
-product_line=$(grep -n -m1 '^## Give your UI a living network$' README.md | cut -d: -f1 || true)
+product_line=$(grep -n -m1 '^## Overview$' README.md | cut -d: -f1 || true)
 
 if \
-  [ -n "$tagline_line" ] &&
+  [ -n "$headline_line" ] &&
   [ -n "$banner_line" ] &&
   [ -n "$badges_line" ] &&
   [ -n "$product_line" ] &&
-  [ "$tagline_line" -lt "$banner_line" ] &&
+  [ "$headline_line" -lt "$banner_line" ] &&
   [ "$banner_line" -lt "$badges_line" ] &&
   [ "$badges_line" -lt "$product_line" ]
 then
   pass 'README hero leads into the product implementation guide'
 else
-  fail 'README hero must be tagline -> banner -> badges -> product guide'
+  fail 'README hero must be headline -> banner -> badges -> product guide'
 fi
 
 for token in \
@@ -75,8 +74,10 @@ else
 fi
 
 for heading in \
+  '## Overview' \
   '## Install' \
   '## Quick start' \
+  '## Usage' \
   '## Web Component API' \
   '### HTML attributes' \
   '### JavaScript properties' \
