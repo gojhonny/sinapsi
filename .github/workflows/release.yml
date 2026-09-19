@@ -41,7 +41,7 @@ jobs:
           node --input-type=module <<'NODE'
           import { readFileSync, appendFileSync } from 'node:fs'
           const { name, version } = JSON.parse(readFileSync('package.json', 'utf8'))
-          if (name !== '@neongate-ai/sinapsi') {
+          if (name !== 'sinapsi') {
             throw new Error('Expected the canonical Sinapsi package')
           }
           if (!/^\d+\.\d+\.\d+$/.test(version)) {

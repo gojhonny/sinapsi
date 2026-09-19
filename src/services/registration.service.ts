@@ -2,7 +2,7 @@ import { SINAPSI_TAG_NAME } from '@core/config.data'
 import type { SinapsiElementConstructor } from '@domain/kernel/element.types'
 import { sinapsiElementClassFactory } from '@factories/element-class.factory'
 
-/** Defines `<sinap-si>` once in the active Custom Element registry. */
+/** Defines `<sinaps-i>` once in the active Custom Element registry. */
 export function defineSinapsi(): SinapsiElementConstructor | undefined {
   if (typeof globalThis.customElements === 'undefined') {
     return undefined

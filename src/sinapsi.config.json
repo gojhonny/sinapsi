@@ -1,6 +1,6 @@
 {
   "component": {
-    "tagName": "sinap-si",
+    "tagName": "sinaps-i",
     "defaults": {
       "move": "rotate",
       "speed": 1,

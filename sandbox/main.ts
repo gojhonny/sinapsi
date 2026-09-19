@@ -8,10 +8,10 @@ import {
 import '../src/browser.client.ts'
 import { sandboxNodes } from './nodes.ts'
 
-const graph = document.querySelector<SinapsiElement>('sinap-si')
+const graph = document.querySelector<SinapsiElement>('sinaps-i')
 const log = document.querySelector<HTMLPreElement>('#event-log')
 if (!graph || !log) {
-  throw new Error('Missing sinap-si sandbox host')
+  throw new Error('Missing sinaps-i sandbox host')
 }
 
 graph.nodes = sandboxNodes

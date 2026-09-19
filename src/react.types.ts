@@ -20,7 +20,7 @@ export type SinapsiReactIntrinsicProps = SinapsiReactHostProps & SinapsiReactAtt
 declare module 'react' {
   namespace JSX {
     interface IntrinsicElements {
-      'sinap-si': SinapsiReactIntrinsicProps
+      'sinaps-i': SinapsiReactIntrinsicProps
     }
   }
 }

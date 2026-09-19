@@ -171,7 +171,7 @@ cat > "$graph_tmp/project/package.json" <<'JSON'
   "packageManager": "pnpm@12.4.2"
 }
 JSON
-if (cd "$graph_tmp/project" && "$graph_tmp/package/cli/graph" --dry-run) | grep -F 'pnpm add @neongate-ai/sinapsi@' >/dev/null 2>&1; then
+if (cd "$graph_tmp/project" && "$graph_tmp/package/cli/graph" --dry-run) | grep -F 'pnpm add sinapsi@' >/dev/null 2>&1; then
   pass 'published CLI routes directly to project setup and detects pnpm'
 else
   fail 'published CLI does not select project setup correctly'
@@ -182,7 +182,7 @@ cat > "$graph_tmp/project/package.json" <<'JSON'
   "name": "graph-consumer-audit",
   "private": true,
   "dependencies": {
-    "@neongate-ai/sinapsi": "^0.1.0"
+    "sinapsi": "^0.1.0"
   }
 }
 JSON

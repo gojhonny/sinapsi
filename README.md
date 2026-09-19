@@ -27,7 +27,7 @@
 
 `@neongate-ai/sinapsi` is a framework-agnostic, SSR-safe Web Component that
 renders a 3D plexus with an Obsidian palette. It exposes one native
-`<sinap-si>` element with a transparent host, a three-color palette,
+`<sinaps-i>` element with a transparent host, a three-color palette,
 idle/rotate/pulse motion, and optional semantic JSON nodes.
 
 Your application keeps ownership of layout, surrounding UI, and product logic.
@@ -35,7 +35,7 @@ Sinapsi does not ship a background token, a persona, or a framework wrapper.
 
 | Capability | What Sinapsi provides |
 | --- | --- |
-| Native Web Component | One `<sinap-si>` element for React, Next.js, Vue, Svelte, Angular, vanilla JS, and mixed stacks |
+| Native Web Component | One `<sinaps-i>` element for React, Next.js, Vue, Svelte, Angular, vanilla JS, and mixed stacks |
 | Transparent host | `inline-block` 16rem canvas with no packaged background color |
 | Palette | `color-primary`, `color-text`, and `color-muted` |
 | Motion | `idle`, `rotate` (default), and `pulse`; pointer-over freezes as idle |
@@ -61,7 +61,7 @@ pnpm add @neongate-ai/sinapsi
 
 ## Quick start
 
-Register `<sinap-si>` from browser-only code:
+Register `<sinaps-i>` from browser-only code:
 
 ```ts
 import '@neongate-ai/sinapsi/browser'
@@ -70,7 +70,7 @@ import '@neongate-ai/sinapsi/browser'
 Then use it as a native element:
 
 ```html
-<sinap-si
+<sinaps-i
   role="img"
   aria-label="Network graph"
   move="rotate"
@@ -78,7 +78,7 @@ Then use it as a native element:
   color-primary="#F97316"
   color-text="#F5F5F5"
   color-muted="#A1A1AA"
-></sinap-si>
+></sinaps-i>
 ```
 
 For typed JavaScript access:
@@ -87,7 +87,7 @@ For typed JavaScript access:
 import type { SinapsiElement } from '@neongate-ai/sinapsi'
 import '@neongate-ai/sinapsi/browser'
 
-const graph = document.querySelector<SinapsiElement>('sinap-si')!
+const graph = document.querySelector<SinapsiElement>('sinaps-i')!
 
 graph.move = 'pulse'
 graph.speed = 1.2
@@ -205,7 +205,7 @@ Then render:
 ```tsx
 export function NetworkMark() {
   return (
-    <sinap-si
+    <sinaps-i
       move="rotate"
       color-primary="#F97316"
       aria-label="Network graph"
@@ -242,7 +242,7 @@ import { defineSinapsi } from '@neongate-ai/sinapsi'
 defineSinapsi()
 ```
 
-`defineSinapsi()` defines `<sinap-si>` once and safely returns without registering
+`defineSinapsi()` defines `<sinaps-i>` once and safely returns without registering
 in a non-browser environment.
 
 <br>

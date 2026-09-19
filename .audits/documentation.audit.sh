@@ -97,7 +97,7 @@ done
 
 for token in \
   '@neongate-ai/sinapsi/browser' \
-  '<sinap-si' \
+  '<sinaps-i' \
   color-primary \
   color-text \
   color-muted \
