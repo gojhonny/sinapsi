@@ -22,8 +22,8 @@ try {
   assert.equal(pkg.author, 'gojhonny', 'author must use the owner handle without an invented email')
   assert.equal(pkg.repository?.url, 'git+https://github.com/gojhonny/sinapsi.git')
   assert.equal(pkg.bugs?.url, 'https://github.com/gojhonny/sinapsi/issues')
-  assert.match(read('LICENSE'), /Copyright \(c\) 2026 gojhonny/)
-  pass('npm identity, GitHub metadata and license identify Sinapsi under gojhonny')
+  assert.match(read('LICENSE'), /Copyright \(c\) 2026 Neongate AI/)
+  pass('npm identity and GitHub metadata identify gojhonny; license identifies Neongate AI')
 
   const release = read('.github/workflows/release.yml')
   for (const token of [

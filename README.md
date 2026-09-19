@@ -1,9 +1,6 @@
-<p align="center">
-  <img
-    src="./assets/images/sinapsi-tagline.svg"
-    alt="One native voice-presence component for every web stack."
-  >
-</p>
+<h1 align="center">Sinapsi</h1>
+
+<p align="center"><strong>Your product vision drifts on a living graph</strong></p>
 
 <p align="center">
   <img src="./assets/images/readme-banner.png" alt="Sinapsi network graph component" width="100%">
