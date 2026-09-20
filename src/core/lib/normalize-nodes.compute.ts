@@ -44,13 +44,8 @@ function parseJsonObject(value: string): unknown {
 }
 
 function describeNodes(value: unknown): string {
-  if (typeof value === 'string') {
-    return value.length > 120 ? `${value.slice(0, 117)}...` : value
-  }
-
-  try {
-    return JSON.stringify(value)
-  } catch {
-    return String(value)
-  }
+  if (typeof value === 'number' || typeof value === 'boolean' || value == null) return String(value)
+  if (typeof value === 'string' && /^-?\d+(\.\d+)?$/.test(value)) return value
+  // Consumer payloads and presentation text may be sensitive. Never echo documents.
+  return typeof value === 'string' ? `[string, ${value.length} characters]` : `[${typeof value}]`
 }

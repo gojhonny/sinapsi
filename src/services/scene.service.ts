@@ -10,6 +10,7 @@ import {
   scale,
   vec3
 } from '@core/math/vector3.compute'
+import { fitProjection } from '@core/scene/fit-projection.compute'
 import { heartbeat, heartbeatScale } from '@core/scene/heartbeat.compute'
 import { project } from '@core/scene/projection.compute'
 import type { Graph, GraphNode, Vec3 } from '@domain/kernel/graph.types'
@@ -46,6 +47,14 @@ export class GraphSceneService {
     this.sceneRadius = Math.max(...graph.nodes.map((node) => length(node.position)), 1)
   }
 
+  /** Content edits must not regenerate positions, jitter, or the current rotation. */
+  updateNames(names: ReadonlyMap<string, string>): void {
+    this.graph = {
+      ...this.graph,
+      nodes: this.graph.nodes.map((node) => ({ ...node, name: names.get(node.key) ?? node.name }))
+    }
+  }
+
   advance(deltaSeconds: number, move: SinapsiMove, speed: number): void {
     this.elapsed += deltaSeconds
     const { secondsPerTurn, tilt } = sinapsiConfiguration.motion
@@ -65,8 +74,10 @@ export class GraphSceneService {
     viewport: Viewport,
     move: SinapsiMove,
     interaction: SceneInteraction = {
-      hoverIds: new Set(),
-      activatedIds: new Set(),
+      activeId: null,
+      activeIds: new Set(),
+      selectedId: null,
+      labeledIds: new Set(),
       focusedId: null,
       semantic: false
     }
@@ -74,13 +85,18 @@ export class GraphSceneService {
     const pulse = move === 'pulse' ? heartbeat(this.pulsePhase) : 0
     const breath =
       move === 'pulse' ? heartbeatScale(pulse, sinapsiConfiguration.motion.pulseScale) : 1
-    const hovering = interaction.semantic && interaction.hoverIds.size > 0
+    const hasActive = interaction.semantic && interaction.activeId !== null
+    const projected = this.graph.nodes.map((node) =>
+      this.projectNode(node, viewport, breath, interaction, hasActive)
+    )
+    // Reserve headroom for the pulse peak; fitting must not cancel the heartbeat.
+    const fittedEnvelope =
+      move === 'pulse' ? breath / (1 + sinapsiConfiguration.motion.pulseScale) : 1
 
     return {
-      nodes: this.graph.nodes.map((node) =>
-        this.projectNode(node, viewport, breath, interaction, hovering)
-      ),
+      nodes: interaction.semantic ? fitProjection(projected, viewport, fittedEnvelope) : projected,
       edges: this.graph.edges,
+      activeId: interaction.semantic ? interaction.activeId : null,
       reveal: this.reveal,
       pulse
     }
@@ -91,14 +107,14 @@ export class GraphSceneService {
     viewport: Viewport,
     breath: number,
     interaction: SceneInteraction,
-    hovering: boolean
+    hasActive: boolean
   ): RenderNode {
     const axis = rotateAroundAxis(this.spinAxis, this.precessAxis, this.precession)
     const world = scale(rotateAroundAxis(this.jittered(node), axis, this.spin), breath)
-    const selected = interaction.semantic && interaction.activatedIds.has(node.key)
-    const emphasized =
-      interaction.hoverIds.has(node.key) || interaction.focusedId === node.key || selected
-    const lit = interaction.semantic ? (selected ? 1 : emphasized ? 0.45 : 0) : 0
+    const selected = interaction.semantic && interaction.selectedId === node.key
+    const emphasized = interaction.semantic && interaction.activeIds.has(node.key)
+    const selectionActive = interaction.activeId === interaction.selectedId
+    const lit = emphasized ? (selectionActive ? 1 : 0.45) : 0
     return {
       ...project(world, sinapsiConfiguration.motion.camera, viewport, this.sceneRadius),
       id: node.key,
@@ -106,8 +122,10 @@ export class GraphSceneService {
       weight: node.weight,
       lit,
       emphasized,
-      dimmed: hovering && !emphasized,
-      labeled: selected
+      dimmed: hasActive && !emphasized,
+      focused: interaction.semantic && interaction.focusedId === node.key,
+      selected,
+      labeled: interaction.semantic && interaction.labeledIds.has(node.key)
     }
   }
 

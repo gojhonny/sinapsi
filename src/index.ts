@@ -23,7 +23,8 @@ export type {
   SinapsiNodeClickEvent,
   SinapsiNodeEventDetail,
   SinapsiNodeEventName,
-  SinapsiNodeHoverEvent
+  SinapsiNodeHoverEvent,
+  SinapsiNodePresentation
 } from '@domain/kernel/nodes.types'
 export {
   SINAPSI_NODE_CLICK_EVENT,

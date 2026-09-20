@@ -37,5 +37,7 @@ export const SINAPSI_PROPERTY_ATTRIBUTES = ['move', 'speed', 'nodes'] as const
 
 export const SINAPSI_OBSERVED_ATTRIBUTES: readonly string[] = [
   ...SINAPSI_COLOR_KEYS.map((key) => SINAPSI_COLOR_ATTRIBUTES[key]),
-  ...SINAPSI_PROPERTY_ATTRIBUTES
+  ...SINAPSI_PROPERTY_ATTRIBUTES,
+  'aria-label',
+  'close-label'
 ]

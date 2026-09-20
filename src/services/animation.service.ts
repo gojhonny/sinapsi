@@ -2,11 +2,10 @@ import { sinapsiConfiguration } from '@core/config.data'
 import { createGraph } from '@core/graph/create-graph.compute'
 import { createSemanticGraph } from '@core/graph/create-semantic-graph.compute'
 import { neighborhoodIds } from '@core/graph/neighborhood.compute'
-import { serializeNodesDocument } from '@core/lib/normalize-nodes.compute'
-import type { FrameCallback, FrameLoop, Tween } from '@domain/kernel/motion.types'
+import type { FrameCallback, FrameLoop, Tween, TweenHandle } from '@domain/kernel/motion.types'
 import type { SinapsiGraphDocument } from '@domain/kernel/nodes.types'
 import type { SinapsiMove, SinapsiProperties } from '@domain/kernel/properties.types'
-import type { SceneInteraction } from '@domain/kernel/render.types'
+import type { RenderFrame, SceneInteraction } from '@domain/kernel/render.types'
 import { CanvasRendererService } from '@services/renderer.service'
 import { GraphSceneService } from '@services/scene.service'
 import { animate, cancelFrame, frame } from 'motion'
@@ -27,6 +26,7 @@ const motionLoop: FrameLoop = {
     const process = scheduled.get(callback)
     if (process) {
       cancelFrame(process)
+      scheduled.delete(callback)
     }
   }
 }
@@ -45,19 +45,22 @@ export interface AnimationDependencies {
   readonly tween?: Tween
 }
 
-/** Per-instance render loop: rebuilds the graph when density or the nodes document changes. */
+/** Per-instance render loop; content updates preserve the graph's topology and motion. */
 export class GraphAnimationService {
   private readonly scene: GraphSceneService
   private readonly renderer: CanvasRendererService
   private readonly loop: FrameLoop
   private readonly tween: Tween
+  private readonly revealTween: TweenHandle
   private readonly tick: FrameCallback
   private properties: SinapsiProperties
   private running = false
   private frozen = false
   private hoverId: string | null = null
   private focusedId: string | null = null
-  private activatedIds = new Set<string>()
+  private selectedId: string | null = null
+  private showSelectedLabels = false
+  private frameListener: ((frame: RenderFrame) => void) | null = null
   private semanticSignature: string | null = null
 
   constructor(
@@ -76,13 +79,10 @@ export class GraphAnimationService {
       if (!this.frozen) {
         this.scene.advance(delta / MS_PER_SECOND, this.properties.move, this.properties.speed)
       }
-      this.renderer.render(
-        this.scene.snapshot(this.renderer.viewport, move, this.interaction()),
-        this.properties.palette
-      )
+      this.renderFrame(move)
     }
     this.scene.reveal = 0.35
-    this.tween(0.35, 1, sinapsiConfiguration.motion.revealSeconds, (value) => {
+    this.revealTween = this.tween(0.35, 1, sinapsiConfiguration.motion.revealSeconds, (value) => {
       this.scene.reveal = value
     })
   }
@@ -93,7 +93,7 @@ export class GraphAnimationService {
     }
 
     this.running = true
-    this.renderer.resize()
+    this.resize()
     this.loop.schedule(this.tick)
   }
 
@@ -106,12 +106,18 @@ export class GraphAnimationService {
     if (graphChanged) {
       this.scene.replaceGraph(graphFrom(properties))
       this.semanticSignature = nextSignature
-      this.hoverId = null
-      this.focusedId = null
-      this.activatedIds = new Set()
+    } else if (properties.semanticNodes) {
+      this.scene.updateNames(
+        new Map(properties.semanticNodes.graph.map((node) => [node.id, node.name]))
+      )
     }
 
     this.properties = properties
+    const validIds = new Set(properties.semanticNodes?.graph.map((node) => node.id))
+    if (this.hoverId !== null && !validIds.has(this.hoverId)) this.hoverId = null
+    if (this.focusedId !== null && !validIds.has(this.focusedId)) this.focusedId = null
+    if (this.selectedId !== null && !validIds.has(this.selectedId)) this.selectedId = null
+    if (this.running) this.renderFrame()
   }
 
   setFrozen(frozen: boolean): void {
@@ -127,8 +133,19 @@ export class GraphAnimationService {
   }
 
   activateNeighborhood(id: string): void {
-    const document = this.properties.semanticNodes
-    this.activatedIds = document ? new Set(neighborhoodIds(document, id)) : new Set()
+    this.selectNode(id, true)
+  }
+
+  /** Selection is independent of hover/focus and does not imply disc labels. */
+  selectNode(id: string | null, showLabels = false): void {
+    const node = this.properties.semanticNodes?.graph.find((entry) => entry.id === id)
+    this.selectedId = node?.id ?? null
+    this.showSelectedLabels = showLabels
+  }
+
+  /** Receives the exact frame already drawn, in CSS pixels, including frozen frames. */
+  setFrameListener(listener: ((frame: RenderFrame) => void) | null): void {
+    this.frameListener = listener
   }
 
   pick(event: PointerEvent): string | null {
@@ -138,9 +155,14 @@ export class GraphAnimationService {
 
   resize(): void {
     this.renderer.resize()
+    this.renderFrame()
   }
 
   dispose(): void {
+    this.frameListener = null
+    this.revealTween.stop()
+    // A reconnect reuses this service; do not leave the graph partially revealed.
+    this.scene.reveal = 1
     if (!this.running) {
       return
     }
@@ -155,14 +177,25 @@ export class GraphAnimationService {
 
   private interaction(): SceneInteraction {
     const document = this.properties.semanticNodes
-    const seed = this.hoverId ?? this.focusedId
-    const hoverIds = document && seed ? neighborhoodIds(document, seed) : new Set<string>()
+    const activeId = this.hoverId ?? this.focusedId ?? this.selectedId
+    const activeIds = document && activeId ? neighborhoodIds(document, activeId) : new Set<string>()
+    const selectedNode = document?.graph.find((node) => node.id === this.selectedId)
+    const showLabels =
+      this.showSelectedLabels && !selectedNode?.presentation && activeId === this.selectedId
     return {
-      hoverIds,
-      activatedIds: this.activatedIds,
+      activeId,
+      activeIds,
+      selectedId: this.selectedId,
+      labeledIds: showLabels ? activeIds : new Set(),
       focusedId: this.focusedId,
       semantic: document !== null
     }
+  }
+
+  private renderFrame(move = this.effectiveMove()): void {
+    const snapshot = this.scene.snapshot(this.renderer.viewport, move, this.interaction())
+    this.renderer.render(snapshot, this.properties.palette)
+    this.frameListener?.(snapshot)
   }
 }
 
@@ -173,5 +206,11 @@ function graphFrom(properties: SinapsiProperties) {
 }
 
 function signatureOf(document: SinapsiGraphDocument | null): string | null {
-  return document ? serializeNodesDocument(document) : null
+  if (!document) return null
+  const ids = document.graph.map((node) => node.id).sort()
+  const edges = new Set<string>()
+  for (const node of document.graph) {
+    for (const link of node.links) edges.add(JSON.stringify([node.id, link.id].sort()))
+  }
+  return JSON.stringify([ids, [...edges].sort()])
 }

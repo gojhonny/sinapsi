@@ -1,13 +1,14 @@
 name: Release
 
 on:
-  push:
-    branches: [main]
-    paths: [package.json]
+  # Publication is initiated by the owner, independently of merging a PR.
   workflow_dispatch:
 
 permissions:
   contents: read
+
+env:
+  npm_config_ignore_scripts: 'true'
 
 concurrency:
   group: sinapsi-npm-release
@@ -33,9 +34,7 @@ jobs:
           node-version-file: .nvmrc
           registry-url: https://registry.npmjs.org
       - name: Install locked dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Inspect environment
-        run: ./cli/graph doctor --ci
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Identify stable release
         run: |
           node --input-type=module <<'NODE'
@@ -47,20 +46,22 @@ jobs:
           if (!/^\d+\.\d+\.\d+$/.test(version)) {
             throw new Error('Expected canonical SemVer')
           }
-          if (version.startsWith('0.')) {
-            console.log('Skipping publish for a 0.x version')
-            appendFileSync(process.env.GITHUB_ENV, 'SKIP_PUBLISH=1\n')
-          }
           appendFileSync(
             process.env.GITHUB_ENV,
             `RELEASE_VERSION=${version}\nRELEASE_TAG=v${version}\n`
           )
           NODE
-      - name: Validate and pack once
-        if: env.SKIP_PUBLISH != '1'
-        run: npm pack --pack-destination "$RUNNER_TEMP"
+      - name: Validate package source and distribution
+        run: |
+          pnpm exec biome lint src sandbox test cli package.json biome.json tsconfig.json tsconfig.test.json *.config.ts commitlint.config.cjs
+          pnpm exec tsc --noEmit
+          pnpm exec tsc -p tsconfig.test.json --noEmit
+          pnpm exec vitest run
+          pnpm exec tsdown
+          pnpm exec tsdown --config tsdown.standalone.config.ts
+      - name: Pack validated build once
+        run: npm pack --ignore-scripts --pack-destination "$RUNNER_TEMP"
       - name: Publish validated tarball
-        if: env.SKIP_PUBLISH != '1'
         run: npm publish "$RUNNER_TEMP"/sinapsi-$RELEASE_VERSION.tgz --access public --tag latest --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

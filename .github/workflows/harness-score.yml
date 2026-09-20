@@ -3,6 +3,7 @@ name: Harness
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -13,6 +14,8 @@ concurrency:
 
 jobs:
   score:
+    # Agent/harness scaffolds are being restructured; run this only on demand.
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 5
 

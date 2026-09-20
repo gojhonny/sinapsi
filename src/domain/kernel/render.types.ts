@@ -20,13 +20,19 @@ export interface RenderNode extends ProjectedPoint {
   readonly lit: number
   readonly emphasized: boolean
   readonly dimmed: boolean
+  /** Exact keyboard focus; distinct from the active neighborhood. */
+  readonly focused: boolean
+  /** The semantic selection remains identifiable during another node's preview. */
+  readonly selected: boolean
   /** Click-activated discs paint `name` inside the circle. */
   readonly labeled: boolean
 }
 
 export interface SceneInteraction {
-  readonly hoverIds: ReadonlySet<string>
-  readonly activatedIds: ReadonlySet<string>
+  readonly activeId: string | null
+  readonly activeIds: ReadonlySet<string>
+  readonly selectedId: string | null
+  readonly labeledIds: ReadonlySet<string>
   readonly focusedId: string | null
   readonly semantic: boolean
 }
@@ -35,6 +41,8 @@ export interface SceneInteraction {
 export interface RenderFrame {
   readonly nodes: readonly RenderNode[]
   readonly edges: readonly GraphEdge[]
+  /** Only edges incident to this exact ID receive the active treatment. */
+  readonly activeId: string | null
   /** Intro progress from 0 to 1: edges grow in and nodes fade in. */
   readonly reveal: number
   /** Heartbeat intensity from 0 to 1; stays 0 outside the pulse move. */

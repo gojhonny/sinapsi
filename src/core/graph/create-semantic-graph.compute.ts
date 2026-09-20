@@ -1,7 +1,7 @@
 import { sinapsiConfiguration } from '@core/config.data'
 import { layoutForce } from '@core/graph/layout.compute'
-import { randomUnitVector } from '@core/math/vector3.compute'
-import type { Graph, GraphEdge, GraphNode } from '@domain/kernel/graph.types'
+import { length, randomUnitVector, scale, vec3 } from '@core/math/vector3.compute'
+import type { Graph, GraphEdge, GraphNode, Vec3 } from '@domain/kernel/graph.types'
 import type { SinapsiGraphDocument } from '@domain/kernel/nodes.types'
 
 /** Builds a plexus from a validated semantic document; edges come only from `link.id`. */
@@ -14,7 +14,7 @@ export function createSemanticGraph(document: SinapsiGraphDocument): Graph {
   const indexById = new Map(document.graph.map((node, index) => [node.id, index]))
   const edges = linksToEdges(document, indexById)
   const { radius, roughness } = sinapsiConfiguration.graph.shape
-  const positions = layoutForce(count, edges, radius, roughness)
+  const positions = fitSemanticPositions(layoutForce(count, edges, radius, roughness), radius)
   const degree = nodeDegrees(edges, count)
   const maxDegree = Math.max(1, ...degree)
 
@@ -30,6 +30,27 @@ export function createSemanticGraph(document: SinapsiGraphDocument): Graph {
   }))
 
   return { nodes, edges }
+}
+
+/** Fit the static 3D layout once, so dense semantic networks use their host space. */
+function fitSemanticPositions(positions: readonly Vec3[], radius: number): Vec3[] {
+  const center = vec3(
+    (Math.min(...positions.map((point) => point.x)) +
+      Math.max(...positions.map((point) => point.x))) /
+      2,
+    (Math.min(...positions.map((point) => point.y)) +
+      Math.max(...positions.map((point) => point.y))) /
+      2,
+    (Math.min(...positions.map((point) => point.z)) +
+      Math.max(...positions.map((point) => point.z))) /
+      2
+  )
+  const centered = positions.map((point) =>
+    vec3(point.x - center.x, point.y - center.y, point.z - center.z)
+  )
+  const farthest = Math.max(...centered.map(length))
+  if (farthest <= 1e-8) return centered
+  return centered.map((point) => scale(point, radius / farthest))
 }
 
 function linksToEdges(

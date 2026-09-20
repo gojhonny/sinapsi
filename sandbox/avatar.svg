@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
+  <title>Illustrative profile</title>
+  <rect width="80" height="80" rx="40" fill="#ffd6bc"/>
+  <circle cx="40" cy="29" r="15" fill="#7c422d"/>
+  <path d="M12 78c0-24 12-36 28-36s28 12 28 36" fill="#7c422d"/>
+</svg>
