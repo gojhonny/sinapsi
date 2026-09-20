@@ -37,7 +37,8 @@ Sinapsi does not ship a background token, a persona, or a framework wrapper.
 | Palette | `color-primary`, `color-text`, and `color-muted` |
 | Motion | `idle`, `rotate` (default), and `pulse`; pointer-over freezes as idle |
 | Nodes | Omit `nodes` for a generated decorative graph; pass `{ "graph": SinapsiNode[] }` for semantic ids, links, hover, and click |
-| Neighborhood lighting | Hover and click light the undirected one-level neighborhood; click draws each `name` inside those discs |
+| Neighborhood lighting | Hover/focus preview direct neighbors and only edges incident to the active node |
+| Node presentations | Optional click-open HTML card or compact tooltip follows the moving node; unconfigured nodes keep legacy labels |
 | SSR safety | Core imports do not require browser globals |
 
 > [!IMPORTANT]
@@ -165,7 +166,6 @@ is JSON:
 
 ```html
 <sinaps-i
-  role="img"
   aria-label="Incident graph"
   nodes='{"graph":[{"id":"cause","name":"Drift cause","payload":{"kind":"cause"},"links":[{"id":"pricing","name":"Pricing"}]},{"id":"pricing","name":"Pricing","payload":{"kind":"pricing"},"links":[{"id":"cause","name":"Drift cause"}]}]}'
 ></sinaps-i>
@@ -268,11 +268,13 @@ With a bundler, replace the script tag with `import 'sinapsi/browser'`.
 | `move` | `idle`, `rotate`, `pulse` | `rotate` | Select the idle animation |
 | `speed` | Number in `[0.1, 10]` | `1` | Scale animation speed |
 | `nodes` | JSON `{ "graph": SinapsiNode[] }` | omitted | Semantic graph; omit for the generated decorative graph |
+| `close-label` | Text | `Close` | Accessible label for the presentation close button |
+| `aria-label` | Text | `Graph nodes` internally | Localized name for semantic keyboard navigation |
 | `color-primary` | Hex CSS color | `#F97316` | Neighborhood node fill |
 | `color-text` | Hex CSS color | `#F5F5F5` | In-disc names and residual highlights |
 | `color-muted` | Hex CSS color | `#A1A1AA` | Inactive node fill |
 
-Observed attributes are exactly those six names. There is no `activation`,
+These attributes are observed. There is no `activation`,
 `color-background`, or size attribute.
 
 Invalid `move`, `speed`, and color attributes log
@@ -344,6 +346,7 @@ interface SinapsiNode {
   name: string
   payload: Record<string, unknown>
   links: SinapsiLink[]
+  presentation?: SinapsiNodePresentation
 }
 
 interface SinapsiGraphDocument {
@@ -379,12 +382,131 @@ graph.nodes = invalid
 // console: [Sinapsi] Invalid nodes=... Keeping previous graph.
 ```
 
+### Optional node cards and tooltips (0.2.0)
+
+Configure `presentation` independently of opaque `payload`. One presentation can
+be open per graph; graphs without it remain compatible.
+
+```ts
+import type { SinapsiNodePresentation } from 'sinapsi'
+
+type Presentation = SinapsiNodePresentation
+// { type: 'tooltip'; description: string }
+// or { type: 'card'; title?: string; description?: string;
+//      avatarUrl?: string; avatarAlt?: string; reference?: string; badge?: string }
+
+graph.nodes = {
+  graph: [
+    {
+      id: 'mapping', name: 'Catalog mapping', payload: { recordId: 'CAT-42' },
+      links: [{ id: 'review', name: 'Review' }],
+      presentation: {
+        type: 'card', title: 'Catalog mapping',
+        description: 'Product identifiers now share one mapping.',
+        reference: 'CAT-42', badge: 'Review'
+      }
+    },
+    {
+      id: 'review', name: 'Review', payload: {}, links: [],
+      presentation: { type: 'tooltip', description: 'Review linked to this change.' }
+    }
+  ]
+}
+graph.setAttribute('aria-label', 'Catalog context')
+graph.setAttribute('close-label', 'Close details')
+```
+
+To include an avatar, supply a relative or HTTP(S) `avatarUrl`; the consuming
+document resolves relative URLs. `avatarAlt` defaults to an empty string.
+Images load when the card is opened. A failed image disappears while the text
+remains available. Executable schemes and data URLs are rejected.
+
+```ts
+const presentation: SinapsiNodePresentation = {
+  type: 'card',
+  avatarUrl: '/people/anna.webp', // The consumer serves this asset.
+  title: 'Anna Souza',
+  description: 'Refactor drift scoring',
+  reference: '#a8f3c2d',
+  badge: '-3 drift'
+}
+```
+
+The component does not interpret scores, references, people or classifications.
+A badge is consumer-formatted text, always using the primary accent. No field
+accepts HTML, JSX, render callbacks or embedded actions.
+
+- A card needs at least one nonblank `title`, `description`, `reference` or
+  `badge`. Avatar-only cards are invalid. Missing fields leave no empty lines.
+- A tooltip needs a nonblank `description`. Its only business content is that
+  description; it also has a close control.
+- Optional whitespace-only text becomes absent. There is no inferred visual
+  title. `node.name` supplies an accessible name when needed.
+- Invalid presentations reject the entire update and preserve the last valid
+  graph. Object, JSON-string property and serialized HTML attribute use the
+  same schema and retain `presentation` on readback.
+
+Prefer property assignment. When writing JSON into an HTML attribute, HTML-escape
+`&`, `<`, and the quote delimiting that attribute (including apostrophes for a
+single-quoted attribute). For example:
+
+```html
+<sinaps-i aria-label="Notes" close-label="Close"
+  nodes='{"graph":[{"id":"note","name":"Note","payload":{},"links":[],"presentation":{"type":"tooltip","description":"Anna&#39;s note &amp; review"}}]}'
+></sinaps-i>
+```
+
+Hover and arrow-key focus only preview connections. Click, tap, Enter or Space
+selects and opens; activating the same open node closes it. Another node replaces
+it; a node without presentation returns to legacy labels. Escape, the visible
+close button, background and outside clicks close it. Touch scrolling and text
+selection inside the card do not activate nodes behind it.
+
+Both styles are nonmodal `role="group"` details, not an ARIA hover tooltip.
+Opening leaves focus in the graph and announces a summary once. Tab reaches the
+close button; closing there returns to the graph. An outside click keeps the
+external focus. Each instance has its own IDs, selection and announcements.
+
+Details follow the same final projection as canvas painting and hit testing,
+including rotation and jitter. They use the manual Popover API when available,
+with an absolute in-host fallback. They flip near boundaries, wrap long text and
+scroll tall content. When the anchor leaves the visible area, details hide while
+retaining logical selection; they restore without stealing focus. Existing
+hover/focus/reduced-motion freezing still applies; opening a card itself does
+not freeze the graph. Content-only updates preserve topology and selection.
+
+Style the panel separately from the transparent host:
+
+```css
+sinaps-i {
+  --sinapsi-presentation-background: #151517;
+  --sinapsi-presentation-border: #3f3f46;
+  --sinapsi-presentation-shadow: 0 12px 36px #0005;
+}
+/* For a light palette: text #171717, muted #6b6b75. */
+sinaps-i.light {
+  --sinapsi-presentation-background: #fff;
+  --sinapsi-presentation-border: #e4e4e7;
+  --sinapsi-presentation-shadow: 0 12px 36px #0002;
+}
+sinaps-i::part(badge) { font-weight: 700; }
+```
+
+Parts: `presentation`, `avatar`, `title`, `description`, `reference`, `badge`,
+`close`. Text, muted text and badge use the three public palette colors. Supply
+localized strings and `close-label`; no localization library is required.
+
+The [vanilla sandbox](./sandbox/index.html) demonstrates a full card, a generic
+card without avatar, a description-only card, a tooltip and a legacy node.
+
 ### Events
 
 Hovering a semantic node highlights it, its one-level neighbors (including
 inbound reverse links), and the connecting edges. Clicking it activates that
-neighborhood until another node is clicked and draws each `name` centered
-inside those discs. Hover does not draw names.
+neighborhood until another node is clicked. Without `presentation`, it draws
+each `name` centered inside those discs. With `presentation`, it opens HTML
+details without enlarging the discs. Hover/focus never opens content; previews
+temporarily replace the selected neighborhood, without changing the open card.
 
 Hover and click always dispatch host events when a semantic node is under the
 pointer or keyboard selection:
@@ -416,7 +538,8 @@ Events bubble and compose from the host. Detail is always
 `{ id, event: 'click' | 'hover', payload }`.
 
 - Programmatic `nodes` writes do not emit.
-- Empty space does not emit and does not clear the click neighborhood.
+- Empty space does not emit. It closes an open presentation and clears its selection;
+  nodes without a presentation retain their legacy selection behavior.
 - Decorative omitted-`nodes` graphs never emit.
 - Hover fires once per enter, not on every pointer move inside the same disc.
 
@@ -435,8 +558,10 @@ Motion freezes as idle — without writing the `move` attribute — when:
 
 There is no public `activation` fill. Decorative omitted-`nodes` graphs stay
 muted. A semantic document lights the hovered or clicked one-level
-neighborhood, including connecting edges. Click also paints `node.name`
-inside every activated disc. Node discs are never stroked.
+neighborhood, including only edges incident to that exact node. An edge between
+two neighbors does not light up. Click paints `node.name` inside activated discs
+only for nodes without `presentation`. A focused node has a double outline;
+a selected node with a presentation has a small selection ring.
 
 ## Palette
 
@@ -480,9 +605,9 @@ sinaps-i {
 }
 ```
 
-The visual tree is a **closed** Shadow DOM. `className`, descendant selectors,
-and inherited theme variables cannot style discs, edges, or labels inside the
-shadow tree. Wrap the host when you need page-layout styling:
+The visual tree is a **closed** Shadow DOM. `className` and descendant selectors
+cannot style the canvas. Presentation custom properties and exported parts are
+the supported way to style HTML details. Wrap the host for page layout:
 
 ```html
 <div class="hero-mark">
@@ -491,7 +616,12 @@ shadow tree. Wrap the host when you need page-layout styling:
 ```
 
 The canvas tracks host size through `ResizeObserver`. Changing the host box
-rescales the projection.
+rescales the projection. Semantic graphs center their topology and fit final
+projected bounds with approximately 24 CSS pixels of adaptive breathing room.
+This keeps the network expressive in small canvases; its envelope can scale
+slightly as it rotates. Pulse mode reserves headroom for its largest beat.
+Canvas painting, pointer hit testing and presentation anchors share these final
+coordinates. Decorative generated graphs retain their previous framing.
 
 ## React and Next.js
 
@@ -729,7 +859,7 @@ unpkg resolves the same file:
 <script type="module" src="https://unpkg.com/sinapsi"></script>
 ```
 
-Pin a version in production (`sinapsi@0.1.1`) so the mark does not change under
+Pin a version in production (`sinapsi@0.2.0`) so the mark does not change under
 you.
 
 ## Accessibility
@@ -742,7 +872,7 @@ Decorative mode has no listbox.
 - For a meaningful visual identity, provide an appropriate role and accessible name.
 - For a decorative graph, hide the host from assistive technology.
 - Do not use animation or palette changes as the only way to communicate meaning.
-- Do not put the semantic listbox under an `aria-hidden` ancestor.
+- Do not put the semantic listbox under an `aria-hidden` ancestor or a `role="img"` host.
 
 ```html
 <!-- Meaningful decorative mark -->
@@ -752,7 +882,7 @@ Decorative mode has no listbox.
 <sinaps-i aria-hidden="true"></sinaps-i>
 
 <!-- Semantic data: host name plus the built-in listbox -->
-<sinaps-i role="img" aria-label="Incident graph"></sinaps-i>
+<sinaps-i aria-label="Incident graph" close-label="Close details"></sinaps-i>
 ```
 
 ## Package entry points

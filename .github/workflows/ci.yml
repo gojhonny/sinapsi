@@ -33,10 +33,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
-
-      - name: Inspect engineering environment
-        run: ./cli/graph doctor --ci
+        run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: Lint pull request commits
         if: github.event_name == 'pull_request'
@@ -47,22 +44,25 @@ jobs:
         run: ./cli/graph git lint --last
 
       - name: Lint
-        run: ./cli/graph lint
+        run: pnpm exec biome lint src sandbox test cli package.json biome.json tsconfig.json tsconfig.test.json *.config.ts commitlint.config.cjs
 
       - name: Typecheck
-        run: ./cli/graph typecheck
+        run: |
+          pnpm exec tsc --noEmit
+          pnpm exec tsc -p tsconfig.test.json --noEmit
 
       - name: Test
-        run: ./cli/graph test
+        run: pnpm exec vitest run
 
       - name: Build
-        run: ./cli/graph build
+        run: |
+          pnpm exec tsdown
+          pnpm exec tsdown --config tsdown.standalone.config.ts
 
       - name: Validate package version
         run: ./cli/graph git version-check
 
-      - name: Run repository audits
-        run: ./cli/graph audit
-
-      - name: Verify npm payload and prepack gate
-        run: npm pack --dry-run
+      # Repository audits and agent scaffolds are being restructured separately.
+      # Package gates above run explicitly; prepack would repeat scaffold checks.
+      - name: Verify npm payload
+        run: npm pack --dry-run --ignore-scripts

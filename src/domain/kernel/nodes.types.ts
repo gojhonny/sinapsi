@@ -14,12 +14,29 @@ export interface SinapsiLink {
   readonly name: string
 }
 
+/** Optional text-only details opened by explicit node activation. */
+export type SinapsiNodePresentation =
+  | {
+      readonly type: 'tooltip'
+      readonly description: string
+    }
+  | {
+      readonly type: 'card'
+      readonly title?: string
+      readonly description?: string
+      readonly avatarUrl?: string
+      readonly avatarAlt?: string
+      readonly reference?: string
+      readonly badge?: string
+    }
+
 /** Consumer-supplied semantic node. */
 export interface SinapsiNode {
   readonly id: string
   readonly name: string
   readonly payload: Readonly<Record<string, unknown>>
   readonly links: readonly SinapsiLink[]
+  readonly presentation?: SinapsiNodePresentation
 }
 
 /** Public JSON document stored on the `nodes` attribute. */

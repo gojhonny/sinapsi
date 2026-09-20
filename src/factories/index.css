@@ -13,8 +13,11 @@ canvas {
   height: 100%;
 }
 
-.node-list {
+.node-list,
+.live-region {
   position: absolute;
+  top: 0;
+  left: 0;
   width: 1px;
   height: 1px;
   padding: 0;
@@ -27,4 +30,132 @@ canvas {
 
 .node-list:focus {
   outline: none;
+}
+
+.presentation {
+  --sinapsi-primary: #f97316;
+  --sinapsi-text: #f5f5f5;
+  --sinapsi-muted: #a1a1aa;
+  box-sizing: border-box;
+  inset: 0 auto auto 0;
+  margin: 0;
+  width: 340px;
+  padding: 16px;
+  border: 1px solid var(--sinapsi-presentation-border, rgb(255 255 255 / 22%));
+  border-radius: 14px;
+  background: var(--sinapsi-presentation-background, #151517);
+  color: var(--sinapsi-text);
+  box-shadow: var(--sinapsi-presentation-shadow, 0 12px 40px rgb(0 0 0 / 22%));
+  font:
+    400 14px / 1.5 ui-sans-serif,
+    system-ui,
+    sans-serif;
+  text-align: start;
+  overflow: auto;
+  overscroll-behavior: contain;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.presentation[hidden] {
+  display: none;
+}
+.presentation[data-layer="top"] {
+  position: fixed;
+}
+.presentation[data-layer="local"] {
+  position: absolute;
+}
+.presentation[data-type="tooltip"] {
+  width: 240px;
+}
+.presentation::backdrop {
+  background: transparent;
+  pointer-events: none;
+}
+
+.presentation-close {
+  align-items: center;
+  background: var(--sinapsi-presentation-background, #151517);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--sinapsi-text);
+  cursor: pointer;
+  display: flex;
+  float: inline-end;
+  font:
+    400 24px / 1 ui-sans-serif,
+    system-ui,
+    sans-serif;
+  height: 32px;
+  justify-content: center;
+  margin: -6px -6px 3px 4px;
+  padding: 0;
+  position: sticky;
+  top: 0;
+  width: 32px;
+  z-index: 1;
+}
+
+.presentation-close:hover {
+  border-color: var(--sinapsi-muted);
+}
+.presentation-close:focus-visible {
+  outline: 2px solid var(--sinapsi-text);
+  outline-offset: 2px;
+}
+.presentation-content {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.presentation-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+.presentation-copy > * {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.presentation-avatar {
+  border-radius: 50%;
+  flex: 0 0 48px;
+  height: 48px;
+  object-fit: cover;
+  width: 48px;
+}
+.presentation-title {
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.4;
+}
+.presentation-description {
+  font-size: 14px;
+}
+.presentation-reference {
+  color: var(--sinapsi-muted);
+  font-size: 12px;
+}
+.presentation-badge {
+  color: var(--sinapsi-primary);
+  font-size: 22px;
+  font-weight: 650;
+  line-height: 1.35;
+  margin-top: 3px;
+}
+
+@media (pointer: coarse) {
+  .presentation-close {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .presentation {
+    transition: none;
+    animation: none;
+  }
 }

@@ -74,6 +74,67 @@ describe('core/normalize-nodes', () => {
     ).toEqual({ ok: false })
   })
 
+  it('preserves complete presentations through object, JSON, and repeated parse/serialize', () => {
+    const document = {
+      graph: [
+        {
+          id: 'card',
+          name: 'Record',
+          payload: { businessId: 'opaque' },
+          links: [{ id: 'tip', name: 'Context' }],
+          presentation: {
+            type: 'card',
+            title: 'A title',
+            description: 'A description',
+            avatarUrl: '../avatar.webp',
+            avatarAlt: 'Profile',
+            reference: '#record',
+            badge: '-3 drift'
+          }
+        },
+        {
+          id: 'tip',
+          name: 'Context',
+          payload: {},
+          links: [],
+          presentation: { type: 'tooltip', description: 'Related evidence' }
+        },
+        {
+          id: 'legacy',
+          name: 'Legacy',
+          payload: { card: { title: 'Not a presentation' } },
+          links: []
+        }
+      ]
+    }
+    const object = parseNodesDocument(document)
+    expect(object.ok).toBe(true)
+    if (!object.ok) return
+    expect(object.document).toEqual(document)
+    const json = parseNodesDocument(serializeNodesDocument(object.document))
+    expect(json).toEqual(object)
+    const callerPresentation = document.graph[0].presentation
+    if (callerPresentation && 'title' in callerPresentation)
+      callerPresentation.title = 'Changed by caller'
+    expect(object.document.graph[0].presentation).toMatchObject({ title: 'A title' })
+    expect(object.document.graph[2]).not.toHaveProperty('presentation')
+  })
+
+  it('never prints consumer payloads or presentation text in invalid-document diagnostics', () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    const invalid = {
+      graph: [{ payload: { secret: 'private-payload' }, presentation: { title: 'private-title' } }]
+    }
+    reportInvalidNodes(invalid)
+    reportInvalidNodes(JSON.stringify(invalid))
+    expect(error).toHaveBeenCalledTimes(2)
+    for (const [message] of error.mock.calls) {
+      expect(message).toContain('Keeping previous graph')
+      expect(message).not.toContain('private-payload')
+      expect(message).not.toContain('private-title')
+    }
+  })
+
   it('reports invalid nodes without substituting a generated graph', () => {
     const error = vi.spyOn(console, 'error').mockImplementation(() => undefined)
     reportInvalidNodes('9000')

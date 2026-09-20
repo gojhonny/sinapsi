@@ -4,6 +4,7 @@ import type { SinapsiMove, SinapsiPaletteOverrides } from '@domain/kernel/proper
 import type { DetailedHTMLProps, HTMLAttributes } from 'react'
 
 export interface SinapsiReactAttributes {
+  'close-label'?: string
   'color-muted'?: string
   'color-primary'?: string
   'color-text'?: string

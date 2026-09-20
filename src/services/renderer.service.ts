@@ -48,7 +48,10 @@ export class CanvasRendererService {
     return { x: event.clientX - bounds.left, y: event.clientY - bounds.top }
   }
 
-  private paintEdges({ nodes, edges, reveal }: RenderFrame, palette: SinapsiPalette): void {
+  private paintEdges(
+    { nodes, edges, reveal, activeId }: RenderFrame,
+    palette: SinapsiPalette
+  ): void {
     const visible = edges.slice(0, Math.floor(edges.length * Math.max(reveal, 0.2)))
     this.ctx.lineCap = 'round'
     this.ctx.lineJoin = 'round'
@@ -57,7 +60,7 @@ export class CanvasRendererService {
       const from = nodes[edge.source]
       const to = nodes[edge.target]
       const near = 1 - (from.depth + to.depth) / 2
-      const neighborhood = from.emphasized && to.emphasized
+      const neighborhood = activeId !== null && (from.id === activeId || to.id === activeId)
       const dim = from.dimmed && to.dimmed ? 0.28 : 1
       this.ctx.lineWidth = neighborhood ? 1.6 : 1
       this.ctx.strokeStyle = neighborhood ? palette.primary : palette.muted
@@ -99,6 +102,20 @@ export class CanvasRendererService {
         this.ctx.textBaseline = 'middle'
         this.ctx.fillText(node.name, node.x, node.y)
       }
+      if (node.focused) {
+        // Concentric outlines communicate keyboard focus without relying on accent color.
+        this.ctx.globalAlpha = 1
+        this.ctx.strokeStyle = palette.text
+        this.ctx.lineWidth = 2
+        this.outline(node, radius + 4)
+        this.ctx.lineWidth = 1
+        this.outline(node, radius + 7)
+      } else if (node.selected && !node.labeled) {
+        this.ctx.globalAlpha = 0.9
+        this.ctx.strokeStyle = palette.primary
+        this.ctx.lineWidth = 1.5
+        this.outline(node, radius + 3)
+      }
     }
   }
 
@@ -110,5 +127,11 @@ export class CanvasRendererService {
     this.ctx.beginPath()
     this.ctx.arc(x, y, radius, 0, Math.PI * 2)
     this.ctx.fill()
+  }
+
+  private outline({ x, y }: RenderNode, radius: number): void {
+    this.ctx.beginPath()
+    this.ctx.arc(x, y, radius, 0, Math.PI * 2)
+    this.ctx.stroke()
   }
 }

@@ -41,4 +41,27 @@ describe('factory/shadow-tree', () => {
     tree.syncOptions(null)
     expect(tree.listbox.isConnected).toBe(false)
   })
+
+  it('uses unique option and presentation IDs, with nonmodal details outside the listbox', () => {
+    const one = sinapsiShadowTreeFactory(
+      document.createElement('div').attachShadow({ mode: 'open' }),
+      document
+    )
+    const two = sinapsiShadowTreeFactory(
+      document.createElement('div').attachShadow({ mode: 'open' }),
+      document
+    )
+    one.syncOptions(sample)
+    two.syncOptions(sample)
+    expect(one.optionId(0)).not.toBe(two.optionId(0))
+    expect(one.presentation.id).not.toBe(two.presentation.id)
+    expect(one.presentation.getAttribute('role')).toBe('group')
+    expect(one.presentation.hasAttribute('aria-modal')).toBe(false)
+    expect(one.presentation.hidden).toBe(true)
+    expect(one.listbox.contains(one.close)).toBe(false)
+    expect(one.close.getAttribute('aria-label')).toBe('Close')
+    one.syncSelection('cause')
+    expect(one.listbox.children[0].getAttribute('aria-selected')).toBe('true')
+    expect(one.listbox.children[1].getAttribute('aria-selected')).toBe('false')
+  })
 })

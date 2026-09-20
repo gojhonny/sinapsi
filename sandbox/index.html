@@ -56,8 +56,10 @@
   </head>
   <body>
     <main>
-      <sinaps-i id="graph" move="rotate" speed="1" aria-label="Semantic drift graph"></sinaps-i>
-      <p>Hover the graph to freeze motion. Hover a node for one-level neighbors; click to activate.</p>
+      <h1>Node presentations</h1>
+      <sinaps-i id="graph" move="rotate" speed="0.2" aria-label="Catalog and product context" close-label="Close details"></sinaps-i>
+      <p>Hover previews direct connections. Click or use arrows and Enter to open details.</p>
+      <p>Catalog: full card · SKU map: no avatar · Search: tooltip · Pricing: description only · Ranking: legacy</p>
       <pre id="event-log">Hover or click a node to echo its payload.</pre>
       <div class="controls">
         <label>
@@ -70,7 +72,7 @@
         </label>
         <label>
           speed
-          <input id="speed" type="range" min="0.1" max="10" step="0.1" value="1" />
+          <input id="speed" type="range" min="0.1" max="10" step="0.1" value="0.2" />
         </label>
       </div>
     </main>

@@ -17,6 +17,8 @@ const labeledFrame: RenderFrame = {
       lit: 1,
       emphasized: true,
       dimmed: false,
+      focused: false,
+      selected: false,
       labeled: true
     },
     {
@@ -29,10 +31,13 @@ const labeledFrame: RenderFrame = {
       lit: 0.45,
       emphasized: true,
       dimmed: false,
+      focused: false,
+      selected: false,
       labeled: false
     }
   ],
   edges: [{ source: 0, target: 1 }],
+  activeId: 'pricing',
   reveal: 1,
   pulse: 0
 }
@@ -85,5 +90,81 @@ describe('service/renderer', () => {
     expect(ctx.stroke).toHaveBeenCalledTimes(1)
     expect(ctx.fill).toHaveBeenCalledTimes(2)
     expect(ctx.arc).toHaveBeenCalledTimes(2)
+  })
+
+  it('lights only incident edges in a triangle with a second-level branch', () => {
+    const ctx = fakeContext()
+    const colors: string[] = []
+    ctx.stroke.mockImplementation(() => {
+      colors.push(ctx.strokeStyle)
+    })
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(
+      ctx as unknown as CanvasRenderingContext2D
+    )
+    const canvas = document.createElement('canvas')
+    Object.defineProperties(canvas, { clientWidth: { value: 200 }, clientHeight: { value: 200 } })
+    const renderer = new CanvasRendererService(canvas)
+    const frame: RenderFrame = {
+      nodes: ['a', 'b', 'c', 'd'].map((id, index) => ({
+        ...labeledFrame.nodes[1],
+        id,
+        x: index * 40,
+        emphasized: index < 3
+      })),
+      edges: [
+        { source: 0, target: 1 },
+        { source: 0, target: 2 },
+        { source: 1, target: 2 },
+        { source: 2, target: 3 }
+      ],
+      activeId: 'a',
+      reveal: 1,
+      pulse: 0
+    }
+    renderer.render(frame, palette)
+    expect(colors).toEqual([palette.primary, palette.primary, palette.muted, palette.muted])
+    colors.length = 0
+    renderer.render({ ...frame, activeId: null }, palette)
+    expect(colors).toEqual(Array(4).fill(palette.muted))
+  })
+
+  it('shows keyboard focus as two outlines while presentation selection keeps resting discs', () => {
+    const ctx = fakeContext()
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(
+      ctx as unknown as CanvasRenderingContext2D
+    )
+    const canvas = document.createElement('canvas')
+    Object.defineProperties(canvas, { clientWidth: { value: 200 }, clientHeight: { value: 200 } })
+    const renderer = new CanvasRendererService(canvas)
+    renderer.render(
+      {
+        ...labeledFrame,
+        edges: [],
+        nodes: [{ ...labeledFrame.nodes[0], labeled: false, selected: true, focused: true }]
+      },
+      palette
+    )
+    expect(ctx.fillText).not.toHaveBeenCalled()
+    expect(ctx.measureText).not.toHaveBeenCalled()
+    expect(ctx.fill).toHaveBeenCalledTimes(1)
+    expect(ctx.stroke).toHaveBeenCalledTimes(2)
+    expect(ctx.arc.mock.calls[1][2]).toBeGreaterThan(ctx.arc.mock.calls[0][2])
+    expect(ctx.arc.mock.calls[2][2]).toBeGreaterThan(ctx.arc.mock.calls[1][2])
+  })
+
+  it('keeps hit testing in CSS pixels at high DPR', () => {
+    const ctx = fakeContext()
+    vi.stubGlobal('devicePixelRatio', 2)
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(
+      ctx as unknown as CanvasRenderingContext2D
+    )
+    const canvas = document.createElement('canvas')
+    Object.defineProperties(canvas, { clientWidth: { value: 200 }, clientHeight: { value: 200 } })
+    const renderer = new CanvasRendererService(canvas)
+    renderer.render(labeledFrame, palette)
+    expect(canvas.width).toBe(400)
+    expect(ctx.setTransform).toHaveBeenCalledWith(2, 0, 0, 2, 0, 0)
+    expect(renderer.pick(80, 90)).toBe('pricing')
+    expect(renderer.pick(160, 180)).toBe(null)
   })
 })
