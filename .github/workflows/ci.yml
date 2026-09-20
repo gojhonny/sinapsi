@@ -7,6 +7,9 @@ on:
 permissions:
   contents: read
 
+env:
+  npm_config_ignore_scripts: 'true'
+
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -37,11 +40,27 @@ jobs:
 
       - name: Lint pull request commits
         if: github.event_name == 'pull_request'
-        run: ./cli/graph git lint --from "${{ github.event.pull_request.base.sha }}" --to "${{ github.event.pull_request.head.sha }}"
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git merge-base "$BASE_SHA" "$HEAD_SHA" >/dev/null
+          commits=$(git rev-list --no-merges "$BASE_SHA..$HEAD_SHA")
+          for commit in $commits; do
+            git show -s --format=%B "$commit" | pnpm exec commitlint --verbose
+          done
 
       - name: Lint pushed commit
         if: github.event_name == 'push'
-        run: ./cli/graph git lint --last
+        run: |
+          if git rev-parse --verify --quiet 'HEAD^2' >/dev/null; then
+            commits=$(git rev-list --no-merges 'HEAD^1..HEAD')
+          else
+            commits=$(git rev-parse --verify HEAD)
+          fi
+          for commit in $commits; do
+            git show -s --format=%B "$commit" | pnpm exec commitlint --verbose
+          done
 
       - name: Lint
         run: pnpm exec biome lint src sandbox test cli package.json biome.json tsconfig.json tsconfig.test.json *.config.ts commitlint.config.cjs
@@ -60,7 +79,16 @@ jobs:
           pnpm exec tsdown --config tsdown.standalone.config.ts
 
       - name: Validate package version
-        run: ./cli/graph git version-check
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs'
+          import semver from 'semver'
+          const { version } = JSON.parse(readFileSync('package.json', 'utf8'))
+          if (typeof version !== 'string' || semver.valid(version) !== version) {
+            throw new Error('package.json version must use canonical SemVer')
+          }
+          console.log(`package.json uses canonical SemVer ${version}`)
+          NODE
 
       # Repository audits and agent scaffolds are being restructured separately.
       # Package gates above run explicitly; prepack would repeat scaffold checks.

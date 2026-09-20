@@ -7,6 +7,9 @@ on:
 permissions:
   contents: read
 
+env:
+  npm_config_ignore_scripts: 'true'
+
 concurrency:
   group: sinapsi-npm-release
   cancel-in-progress: false
